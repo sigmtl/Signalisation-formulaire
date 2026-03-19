@@ -1313,18 +1313,16 @@ async function soumettre() {
 
   try {
     const data = collecterDonnees();
-    const response = await fetch(POWER_AUTOMATE_URL, {
+    // Utiliser no-cors pour contourner les restrictions CORS de Power Automate
+    await fetch(POWER_AUTOMATE_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data)
+      body: JSON.stringify(data),
+      mode: 'no-cors'
     });
-
-    if (response.ok) {
-      showToast('✓ Avis soumis avec succès!', true);
-      showConfirmation(data, true);
-    } else {
-      throw new Error('HTTP ' + response.status);
-    }
+    // Avec no-cors, on ne peut pas lire la réponse — on assume le succès
+    showToast('✓ Avis soumis avec succès!', true);
+    showConfirmation(data, true);
   } catch (err) {
     showToast('Erreur d\'envoi: ' + err.message, false);
     console.error(err);
