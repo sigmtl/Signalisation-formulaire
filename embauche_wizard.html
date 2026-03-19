@@ -1309,7 +1309,8 @@ body.mode-rh .rh-badge { display: inline-block; }
 
 <div id="toast"></div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
+// ── FIX: s'assurer que le script principal démarre proprement ──
 // ══════════════════════════════════════════
 // CONFIGURATION
 // ══════════════════════════════════════════
@@ -1880,4 +1881,8 @@ function showConfirm(d) {
         <button onclick="window.print();this.closest('div[style]').remove();" style="font-family:inherit;font-size:13px;font-weight:600;padding:9px 18px;border-radius:5px;border:none;background:#C8202A;color:#fff;cursor:pointer;">Imprimer dossier</button>
       </div>
     </div>`;
-  document.body.appendChild(overla
+  document.body.appendChild(overlay);
+}
+</script>
+</body>
+</html>
