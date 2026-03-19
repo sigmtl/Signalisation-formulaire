@@ -1428,6 +1428,14 @@ function goTo(n) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (n === 8) buildSummary();
 }
+// Exposer explicitement sur window pour les onclick HTML
+window.goTo = goTo;
+window.toggleMode = toggleMode;
+window.addExp = addExp;
+window.addFormAcad = addFormAcad;
+window.clearSig = clearSig;
+window.soumettre = soumettre;
+window.toggleTerrain = toggleTerrain;
 
 // ── MODE TOGGLE ──
 function toggleMode() {
@@ -1443,61 +1451,79 @@ function toggleMode() {
   // Horodateur visible to all, just info
 }
 
-// ── CHECKBOX / RADIO ──
-// ── CHECKBOX / RADIO — addEventListener (compatible Teams/iframe) ──
-function initCheckboxes() {
-  // Cases à cocher génériques (.cb-item)
-  document.querySelectorAll('.cb-item').forEach(item => {
-    item.querySelectorAll('input, .cb-box').forEach(child => {
-      child.addEventListener('click', e => e.stopPropagation());
-    });
-    item.addEventListener('click', function() {
-      const groupRadio = this.querySelector('input[type=radio]');
-      if (groupRadio) {
-        // Comportement radio : trouver le groupe parent
-        const parent = this.closest('[id]');
-        if (parent) {
-          parent.querySelectorAll('.cb-item').forEach(i => i.classList.remove('checked'));
-        }
-        this.classList.add('checked');
-        // Actions spéciales selon le groupe
-        const parentId = parent ? parent.id : '';
-        const val = this.dataset.val;
-        if (parentId === 'permis-oui-non') togglePermisDetails(val === 'Oui');
-        if (parentId === 'accident-oui-non') {
-          const det = document.getElementById('accident-details');
-          if (det) det.style.display = val === 'Oui' ? 'grid' : 'none';
-        }
-      } else {
-        // Comportement checkbox
-        this.classList.toggle('checked');
-        const cb = this.querySelector('input[type=checkbox]');
-        if (cb) cb.checked = this.classList.contains('checked');
-        // Action spéciale : Autre formation
-        if (this.dataset.val === 'Autre') {
-          const w = document.getElementById('formation-autre-wrap');
-          if (w) w.style.display = this.classList.contains('checked') ? 'block' : 'none';
-        }
-      }
-    });
-  });
+// ── CHECKBOX / RADIO — délégation globale sur document ──
+// Une seule règle qui capture TOUS les clics sur .cb-item, .dispo-cell, .lang-opt
+document.addEventListener('click', function(e) {
 
-  // Cellules de disponibilité
-  document.querySelectorAll('.dispo-cell').forEach(cell => {
-    cell.addEventListener('click', function() {
-      this.classList.toggle('on');
-    });
-  });
+  // ── Cases à cocher (.cb-item) ──
+  const cbItem = e.target.closest('.cb-item');
+  if (cbItem) {
+    e.preventDefault();
+    e.stopPropagation();
+    const hasRadio = cbItem.querySelector('input[type=radio]');
+    if (hasRadio) {
+      // Comportement radio — désélectionner les autres dans le même groupe
+      const group = cbItem.closest('.cb-group') || cbItem.parentElement;
+      group.querySelectorAll('.cb-item').forEach(i => i.classList.remove('checked'));
+      cbItem.classList.add('checked');
+      // Actions spéciales
+      const val = cbItem.dataset.val;
+      const groupEl = cbItem.closest('[id]');
+      const groupId = groupEl ? groupEl.id : '';
+      if (groupId === 'permis-oui-non') {
+        document.getElementById('permis-num-wrap').style.display = val === 'Oui' ? 'block' : 'none';
+        document.getElementById('permis-classes-wrap').style.display = val === 'Oui' ? 'block' : 'none';
+      }
+      if (groupId === 'accident-oui-non') {
+        const det = document.getElementById('accident-details');
+        if (det) det.style.display = val === 'Oui' ? 'grid' : 'none';
+      }
+    } else {
+      // Comportement checkbox
+      cbItem.classList.toggle('checked');
+      const inp = cbItem.querySelector('input[type=checkbox]');
+      if (inp) inp.checked = cbItem.classList.contains('checked');
+      // Action spéciale : Autre formation
+      if (cbItem.dataset.val === 'Autre') {
+        const w = document.getElementById('formation-autre-wrap');
+        if (w) w.style.display = cbItem.classList.contains('checked') ? 'block' : 'none';
+      }
+    }
+    return;
+  }
+
+  // ── Cellules de disponibilité (.dispo-cell) ──
+  const dispoCell = e.target.closest('.dispo-cell');
+  if (dispoCell) {
+    e.preventDefault();
+    dispoCell.classList.toggle('on');
+    return;
+  }
+
+  // ── Sélecteur de langue (.lang-opt) ──
+  const langOpt = e.target.closest('.lang-opt');
+  if (langOpt) {
+    e.preventDefault();
+    const group = langOpt.closest('.lang-opts');
+    if (group) group.querySelectorAll('.lang-opt').forEach(o => o.classList.remove('sel'));
+    langOpt.classList.add('sel');
+    langOpt.dataset.val = langOpt.textContent.trim();
+    return;
+  }
+
+});
+
+function initCheckboxes() {
+  // Délégation déjà active via document.addEventListener ci-dessus
+  // Cette fonction reste pour compatibilité mais ne fait rien
 }
 
-function toggleCb(el, event) {
-  if (event && event.target && (event.target.tagName === 'INPUT' || event.target.classList.contains('cb-box'))) return;
+function toggleCb(el) {
   el.classList.toggle('checked');
   const inp = el.querySelector('input');
   if (inp) inp.checked = el.classList.contains('checked');
 }
-function toggleRadio(el, groupId, event) {
-  if (event && event.target && (event.target.tagName === 'INPUT' || event.target.classList.contains('cb-box'))) return;
+function toggleRadio(el, groupId) {
   document.querySelectorAll(`#${groupId} .cb-item`).forEach(i => i.classList.remove('checked'));
   el.classList.add('checked');
 }
@@ -1508,7 +1534,7 @@ function togglePermisDetails(show) {
   document.getElementById('permis-classes-wrap').style.display = show ? 'block' : 'none';
 }
 
-// ── LANGUAGE SELECTOR ──
+// ── LANGUAGE SELECTOR (fallback — délégation gère aussi) ──
 function selectLang(el, groupId, val) {
   document.querySelectorAll(`#${groupId} .lang-opt`).forEach(o => o.classList.remove('sel'));
   el.classList.add('sel');
