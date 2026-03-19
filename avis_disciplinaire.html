@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Avis Disciplinaire – Signalisation de Montréal Inc.</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+  :root {
+    --rouge: #C8202A;
+    --rouge-pale: #f8e8e9;
+    --noir: #1A1A1A;
+    --gris-fonce: #3A3A3A;
+    --gris-moyen: #6B6B6B;
+    --gris-clair: #D8D8D8;
+    --gris-bg: #F5F5F5;
+    --blanc: #FFFFFF;
+    --jaune-accent: #F5A623;
+    --ombre: 0 2px 8px rgba(0,0,0,0.10);
+    --radius: 4px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--gris-bg);
+    color: var(--noir);
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── HEADER ── */
+  .app-header {
+    background: var(--noir);
+    color: var(--blanc);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 28px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border-bottom: 3px solid var(--rouge);
+  }
+  .app-header .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .logo-badge {
+    background: var(--rouge);
+    color: var(--blanc);
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    font-size: 18px;
+    width: 42px; height: 42px;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    letter-spacing: -1px;
+    flex-shrink: 0;
+  }
+  .brand-text { line-height: 1.2; }
+  .brand-text .company { font-size: 11px; font-weight: 400; color: #aaa; letter-spacing: 0.08em; text-transform: uppercase; }
+  .brand-text .form-title { font-size: 16px; font-weight: 700; letter-spacing: 0.02em; }
+
+  .header-actions { display: flex; gap: 10px; }
+  .btn {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 18px;
+    border-radius: var(--radius);
+    border: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    letter-spacing: 0.03em;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-outline {
+    background: transparent;
+    border: 1.5px solid var(--gris-clair);
+    color: var(--blanc);
+  }
+  .btn-outline:hover { background: rgba(255,255,255,0.1); }
+  .btn-primary {
+    background: var(--rouge);
+    color: var(--blanc);
+  }
+  .btn-primary:hover { background: #a8181f; }
+  .btn-success {
+    background: #2a7a3b;
+    color: var(--blanc);
+  }
+  .btn-success:hover { background: #1e5e2c; }
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  /* ── MAIN LAYOUT ── */
+  .main {
+    max-width: 860px;
+    margin: 28px auto;
+    padding: 0 16px 60px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--blanc);
+    border-radius: 6px;
+    box-shadow: var(--ombre);
+    margin-bottom: 18px;
+    overflow: hidden;
+  }
+  .card-header {
+    background: var(--noir);
+    color: var(--blanc);
+    padding: 10px 20px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .card-header::before {
+    content: '';
+    display: block;
+    width: 3px; height: 14px;
+    background: var(--rouge);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .card-body { padding: 20px; }
+
+  /* ── FORM FIELDS ── */
+  .field-row {
+    display: grid;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .field-row.col-2 { grid-template-columns: 1fr 1fr; }
+  .field-row.col-3 { grid-template-columns: 2fr 1fr 1fr; }
+  .field-row.col-1 { grid-template-columns: 1fr; }
+
+  .field { display: flex; flex-direction: column; gap: 5px; }
+  label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--gris-moyen);
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+  }
+  input[type="text"],
+  input[type="date"],
+  input[type="time"],
+  textarea {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    color: var(--noir);
+    background: var(--gris-bg);
+    border: 1.5px solid var(--gris-clair);
+    border-radius: var(--radius);
+    padding: 9px 12px;
+    transition: border-color 0.15s, background 0.15s;
+    width: 100%;
+  }
+  input[type="text"]:focus,
+  input[type="date"]:focus,
+  input[type="time"]:focus,
+  textarea:focus {
+    outline: none;
+    border-color: var(--rouge);
+    background: var(--blanc);
+  }
+  textarea { resize: vertical; min-height: 80px; }
+
+  /* ── CHECKBOXES GRID ── */
+  .checkbox-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px 14px;
+    margin-top: 4px;
+  }
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 9px 12px;
+    background: var(--gris-bg);
+    border: 1.5px solid var(--gris-clair);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .checkbox-item:hover { border-color: var(--rouge); background: var(--rouge-pale); }
+  .checkbox-item.checked {
+    border-color: var(--rouge);
+    background: var(--rouge-pale);
+  }
+  .checkbox-item input[type="checkbox"] { display: none; }
+  .checkbox-box {
+    width: 18px; height: 18px;
+    border: 2px solid var(--gris-clair);
+    border-radius: 3px;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.15s;
+    background: var(--blanc);
+  }
+  .checkbox-item.checked .checkbox-box {
+    background: var(--rouge);
+    border-color: var(--rouge);
+  }
+  .checkbox-box svg { display: none; }
+  .checkbox-item.checked .checkbox-box svg { display: block; }
+  .checkbox-label { font-size: 13px; font-weight: 500; }
+
+  /* ── AUTRE PRÉCISEZ ── */
+  #autre-container {
+    display: none;
+    margin-top: 8px;
+  }
+
+  /* ── GRADE SELECTOR ── */
+  .grade-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin-top: 4px;
+  }
+  .grade-item {
+    background: var(--gris-bg);
+    border: 2px solid var(--gris-clair);
+    border-radius: var(--radius);
+    padding: 12px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .grade-item:hover { border-color: var(--rouge); background: var(--rouge-pale); }
+  .grade-item.selected {
+    border-color: var(--rouge);
+    background: var(--rouge);
+    color: var(--blanc);
+  }
+  .grade-item .grade-num {
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 700;
+    font-size: 16px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .grade-item .grade-name {
+    font-size: 11px;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+  .grade-item .grade-desc {
+    font-size: 10px;
+    line-height: 1.3;
+    opacity: 0.75;
+  }
+  .grade-item.selected .grade-desc { opacity: 0.9; }
+
+  /* ── SIGNATURE ZONE ── */
+  .sig-zone {
+    background: var(--gris-bg);
+    border: 1.5px dashed var(--gris-clair);
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .sig-zone label { margin-bottom: 8px; display: block; }
+  canvas.sig-canvas {
+    display: block;
+    width: 100%;
+    height: 120px;
+    background: var(--blanc);
+    border: 1.5px solid var(--gris-clair);
+    border-radius: var(--radius);
+    cursor: crosshair;
+    touch-action: none;
+  }
+  .sig-actions { display: flex; justify-content: flex-end; margin-top: 8px; }
+  .btn-clear {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--gris-moyen);
+    background: transparent;
+    border: 1px solid var(--gris-clair);
+    padding: 4px 12px;
+    border-radius: var(--radius);
+    cursor: pointer;
+  }
+  .btn-clear:hover { color: var(--rouge); border-color: var(--rouge); }
+
+  /* ── REFUS CHECKBOX ── */
+  .refus-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    border: 1.5px solid var(--gris-clair);
+    border-radius: var(--radius);
+    cursor: pointer;
+    background: var(--gris-bg);
+    margin-top: 8px;
+    transition: all 0.15s;
+    user-select: none;
+  }
+  .refus-row:hover { border-color: var(--jaune-accent); }
+  .refus-row.checked { border-color: var(--jaune-accent); background: #fffbf0; }
+  .refus-row .refus-box {
+    width: 20px; height: 20px;
+    border: 2px solid var(--gris-clair);
+    border-radius: 3px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    background: var(--blanc);
+  }
+  .refus-row.checked .refus-box {
+    background: var(--jaune-accent);
+    border-color: var(--jaune-accent);
+  }
+  .refus-row .refus-text { font-size: 13px; font-weight: 500; }
+  #refus-date-container { display: none; margin-top: 12px; }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed;
+    bottom: 30px; right: 30px;
+    background: var(--noir);
+    color: var(--blanc);
+    padding: 14px 22px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    border-left: 4px solid var(--rouge);
+    box-shadow: 0 6px 24px rgba(0,0,0,0.25);
+    opacity: 0;
+    transform: translateY(16px);
+    transition: all 0.3s;
+    pointer-events: none;
+    z-index: 9999;
+    max-width: 340px;
+  }
+  #toast.visible { opacity: 1; transform: translateY(0); }
+  #toast.success { border-left-color: #2a7a3b; }
+
+  /* ── PRINT PREVIEW ── */
+  #print-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.6);
+    z-index: 500;
+    align-items: center; justify-content: center;
+  }
+  #print-overlay.visible { display: flex; }
+  #print-box {
+    background: var(--blanc);
+    border-radius: 8px;
+    padding: 28px;
+    max-width: 520px; width: 90%;
+    text-align: center;
+  }
+  #print-box h2 { font-size: 18px; margin-bottom: 10px; }
+  #print-box p { color: var(--gris-moyen); font-size: 14px; margin-bottom: 20px; }
+  #print-box .btns { display: flex; gap: 10px; justify-content: center; }
+
+  /* ── PRINT STYLES ── */
+  @media print {
+    body { background: white; font-size: 12px; }
+    .app-header, .header-actions, .btn, .sig-actions, #toast { display: none !important; }
+    .main { max-width: 100%; margin: 0; padding: 0; }
+    .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+    .card-header { background: #1A1A1A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .grade-item.selected { background: #C8202A !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    canvas.sig-canvas { border: 1px solid #ccc; }
+  }
+
+  .checkbox-item input[type=checkbox],
+  .checkbox-item .checkbox-box { pointer-events: none; }
+  .cb-item input[type=checkbox],
+  .cb-item .cb-box { pointer-events: none; }
+
+  /* ── TERRAIN TOGGLE ── */
+  .terrain-toggle {
+    display: flex; align-items: center; gap: 7px;
+    cursor: pointer; user-select: none;
+  }
+  .terrain-toggle input { display: none; }
+  .terrain-box {
+    width: 18px; height: 18px;
+    border: 2px solid var(--gris-clair);
+    border-radius: 3px;
+    background: var(--blanc);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.15s;
+  }
+  .terrain-toggle input:checked + .terrain-box {
+    background: var(--jaune-accent);
+    border-color: var(--jaune-accent);
+  }
+  .terrain-toggle input:checked + .terrain-box::after {
+    content: '';
+    display: block;
+    width: 5px; height: 9px;
+    border: 2px solid white;
+    border-top: none; border-left: none;
+    transform: rotate(45deg) translate(-1px, -1px);
+  }
+  input:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    background: var(--gris-clair) !important;
+    border-color: var(--gris-clair) !important;
+  }
+
+  /* ── AUTOCOMPLETE PEOPLE PICKER ── -->
+  .people-picker-wrap { position: relative; }
+  .people-dropdown {
+    position: absolute;
+    top: calc(100% + 4px); left: 0; right: 0;
+    background: var(--blanc);
+    border: 1.5px solid var(--rouge);
+    border-radius: var(--radius);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+    z-index: 200;
+    max-height: 220px;
+    overflow-y: auto;
+    display: none;
+  }
+  .people-dropdown.open { display: block; }
+  .people-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 14px;
+    cursor: pointer;
+    transition: background 0.1s;
+    border-bottom: 1px solid var(--gris-clair);
+  }
+  .people-item:last-child { border-bottom: none; }
+  .people-item:hover, .people-item.active { background: var(--rouge-pale); }
+  .people-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: var(--noir);
+    color: var(--blanc);
+    font-weight: 700;
+    font-size: 13px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+  }
+  .people-info { line-height: 1.3; min-width: 0; }
+  .people-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .people-meta { font-size: 11px; color: var(--gris-moyen); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .people-searching {
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--gris-moyen);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .spinner {
+    width: 14px; height: 14px;
+    border: 2px solid var(--gris-clair);
+    border-top-color: var(--rouge);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    flex-shrink: 0;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .field-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #e8f4fd; color: #0066cc;
+    border: 1px solid #b3d9f5;
+    border-radius: 12px;
+    font-size: 11px; font-weight: 600;
+    padding: 2px 8px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .field-badge svg { flex-shrink: 0; }
+  input.from-m365 {
+    border-color: #2a7a3b !important;
+    background: #f0fff4 !important;
+  }
+
+  @media (max-width: 600px) {
+    .app-header { padding: 12px 14px; flex-wrap: wrap; gap: 10px; }
+    .checkbox-grid { grid-template-columns: repeat(2, 1fr); }
+    .grade-grid { grid-template-columns: repeat(3, 1fr); }
+    .field-row.col-2, .field-row.col-3 { grid-template-columns: 1fr; }
+    .header-actions .btn span { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="brand">
+    <div class="logo-badge">S</div>
+    <div class="brand-text">
+      <div class="company">Signalisation de Montréal Inc.</div>
+      <div class="form-title">Avis Disciplinaire</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-outline" onclick="resetForm()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.5"/></svg>
+      <span>Réinitialiser</span>
+    </button>
+    <button class="btn btn-outline" onclick="window.print()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      <span>Imprimer</span>
+    </button>
+    <button class="btn btn-primary" onclick="exportPDF()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      <span>Exporter PDF</span>
+    </button>
+    <button class="btn btn-success" onclick="soumettre()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <span>Soumettre</span>
+    </button>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- IDENTIFICATION -->
+  <div class="card">
+    <div class="card-header">Identification de l'employé</div>
+    <div class="card-body">
+
+      <!-- Employé -->
+      <div class="field-row col-2" style="margin-bottom:14px;">
+        <div class="field">
+          <label for="nom-employe">
+            Nom de l'employé
+            <span class="field-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Microsoft 365
+            </span>
+          </label>
+          <div class="people-picker-wrap">
+            <input type="text" id="nom-employe" placeholder="Tapez un nom pour rechercher…" autocomplete="off"
+              oninput="rechercherPersonne(this, 'employe')" onkeydown="navDropdown(event, 'dropdown-employe')">
+            <div class="people-dropdown" id="dropdown-employe"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="poste">Poste occupé</label>
+          <input type="text" id="poste" placeholder="Rempli automatiquement ou saisissez manuellement">
+        </div>
+      </div>
+      <div class="field-row col-2" style="margin-bottom:18px;">
+        <div class="field">
+          <label for="courriel-employe">
+            Courriel de l'employé
+            <span style="font-size:11px;color:var(--gris-moyen);font-weight:400;margin-left:4px;">(optionnel si employé de terrain)</span>
+          </label>
+          <input type="text" id="courriel-employe" placeholder="Rempli automatiquement ou saisissez manuellement">
+        </div>
+        <div class="field" style="justify-content:flex-end;padding-bottom:4px;">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div id="badge-employe" style="display:none;font-size:12px;color:#2a7a3b;font-weight:600;align-items:center;gap:5px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2a7a3b" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Fiche M365 trouvée
+            </div>
+            <label class="terrain-toggle" title="Cochez si l'employé n'a pas de courriel (employé de terrain)">
+              <input type="checkbox" id="cb-terrain" onchange="toggleTerrain(this)">
+              <span class="terrain-box"></span>
+              <span style="font-size:12px;font-weight:500;color:var(--gris-moyen);">Employé de terrain (sans courriel)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Supérieur -->
+      <div class="field-row col-2" style="margin-bottom:14px;">
+        <div class="field">
+          <label for="nom-superieur">
+            Nom du supérieur
+            <span class="field-badge">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              Microsoft 365
+            </span>
+          </label>
+          <div class="people-picker-wrap">
+            <input type="text" id="nom-superieur" placeholder="Tapez un nom pour rechercher…" autocomplete="off"
+              oninput="rechercherPersonne(this, 'superieur')" onkeydown="navDropdown(event, 'dropdown-superieur')">
+            <div class="people-dropdown" id="dropdown-superieur"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="courriel-superieur">Courriel du supérieur</label>
+          <input type="text" id="courriel-superieur" placeholder="Rempli automatiquement ou saisissez manuellement">
+        </div>
+      </div>
+
+      <!-- Date / Heure -->
+      <div class="field-row col-2">
+        <div class="field">
+          <label for="date-avis">Date</label>
+          <input type="date" id="date-avis">
+        </div>
+        <div class="field">
+          <label for="heure-avis">Heure</label>
+          <input type="time" id="heure-avis">
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MANQUEMENTS -->
+  <div class="card">
+    <div class="card-header">Manquement(s)</div>
+    <div class="card-body">
+      <label style="margin-bottom:10px;display:block;">Cochez la raison de la mesure disciplinaire :</label>
+      <div class="checkbox-grid" id="manquements-grid">
+        <!-- Colonne 1 -->
+        <div class="checkbox-item" data-val="retard">
+          <input type="checkbox" id="cb-retard">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Retard</span>
+        </div>
+        <div class="checkbox-item" data-val="insubordination">
+          <input type="checkbox" id="cb-insubordination">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Insubordination</span>
+        </div>
+        <div class="checkbox-item" data-val="alcool-drogue">
+          <input type="checkbox" id="cb-alcool">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Alcool / Drogue</span>
+        </div>
+        <div class="checkbox-item" data-val="absence-avec-avis">
+          <input type="checkbox" id="cb-absence-avec">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Absence avec avis</span>
+        </div>
+        <div class="checkbox-item" data-val="travail-insuffisant">
+          <input type="checkbox" id="cb-travail">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Travail insuffisant</span>
+        </div>
+        <div class="checkbox-item" data-val="vandalisme">
+          <input type="checkbox" id="cb-vandalisme">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Vandalisme</span>
+        </div>
+        <div class="checkbox-item" data-val="absence-sans-avis">
+          <input type="checkbox" id="cb-absence-sans">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Absence sans avis</span>
+        </div>
+        <div class="checkbox-item" data-val="violation-regles">
+          <input type="checkbox" id="cb-violation">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Violation des règles établies</span>
+        </div>
+        <div class="checkbox-item" data-val="bataille">
+          <input type="checkbox" id="cb-bataille">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Bataille</span>
+        </div>
+        <div class="checkbox-item" data-val="temps-diner-pause">
+          <input type="checkbox" id="cb-diner">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Temps de dîner / pause</span>
+        </div>
+        <div class="checkbox-item" data-val="flanage">
+          <input type="checkbox" id="cb-flanage">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Flânage / Perte de temps</span>
+        </div>
+        <div class="checkbox-item" data-val="vol">
+          <input type="checkbox" id="cb-vol">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Vol</span>
+        </div>
+        <div class="checkbox-item" data-val="attitude-negligence">
+          <input type="checkbox" id="cb-attitude">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Attitude / Négligence</span>
+        </div>
+        <div class="checkbox-item" data-val="harcelement">
+          <input type="checkbox" id="cb-harcelement">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Harcèlement</span>
+        </div>
+        <div class="checkbox-item" data-val="accident-contravention">
+          <input type="checkbox" id="cb-accident">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Accident / Contravention</span>
+        </div>
+        <div class="checkbox-item" data-val="refus-travailler">
+          <input type="checkbox" id="cb-refus-travailler">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Refus de travailler</span>
+        </div>
+        <div class="checkbox-item" data-val="intimidation">
+          <input type="checkbox" id="cb-intimidation">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Intimidation</span>
+        </div>
+        <div class="checkbox-item" data-val="autre">
+          <input type="checkbox" id="cb-autre">
+          <div class="checkbox-box"><svg width="11" height="9" viewBox="0 0 11 9" fill="none"><polyline points="1,4.5 4,7.5 10,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <span class="checkbox-label">Autre, précisez</span>
+        </div>
+      </div>
+      <div id="autre-container">
+        <div class="field" style="margin-top:0;">
+          <label for="autre-detail">Précisez le motif</label>
+          <input type="text" id="autre-detail" placeholder="Décrivez le motif...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRADATION -->
+  <div class="card">
+    <div class="card-header">Gradation de l'avis disciplinaire</div>
+    <div class="card-body">
+      <div class="grade-grid">
+        <div class="grade-item" data-grade="1" onclick="selectGrade(this)">
+          <span class="grade-num">1</span>
+          <span class="grade-name">Avis verbal</span>
+          <span class="grade-desc">Note au dossier</span>
+        </div>
+        <div class="grade-item" data-grade="2" onclick="selectGrade(this)">
+          <span class="grade-num">2</span>
+          <span class="grade-name">Avis écrit</span>
+          <span class="grade-desc">Rapport au dossier signé</span>
+        </div>
+        <div class="grade-item" data-grade="3" onclick="selectGrade(this)">
+          <span class="grade-num">3</span>
+          <span class="grade-name">Avis écrit</span>
+          <span class="grade-desc">Possibilité de suspension 1 jour sans solde</span>
+        </div>
+        <div class="grade-item" data-grade="4" onclick="selectGrade(this)">
+          <span class="grade-num">4</span>
+          <span class="grade-name">Avis écrit</span>
+          <span class="grade-desc">Possibilité de suspension 3 jours sans solde</span>
+        </div>
+        <div class="grade-item" data-grade="5" onclick="selectGrade(this)">
+          <span class="grade-num">⊗</span>
+          <span class="grade-name">Congédiement</span>
+          <span class="grade-desc">&nbsp;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFORMATIONS -->
+  <div class="card">
+    <div class="card-header">Informations de l'avis disciplinaire</div>
+    <div class="card-body">
+      <div class="field-row col-1">
+        <div class="field">
+          <label for="description">Description et cause du manquement</label>
+          <textarea id="description" rows="4" placeholder="Décrivez les faits de manière précise et objective..."></textarea>
+        </div>
+      </div>
+      <div class="field-row col-1">
+        <div class="field">
+          <label for="correction">Correction requise et/ou aide offerte pour que le comportement change</label>
+          <textarea id="correction" rows="4" placeholder="Indiquez les attentes, les ressources offertes, les mesures de suivi..."></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPROBATION -->
+  <div class="card">
+    <div class="card-header">Approbation et signature</div>
+    <div class="card-body">
+      <div class="field-row col-2" style="margin-bottom:14px;">
+        <div class="sig-zone">
+          <label>Signature du supérieur</label>
+          <canvas class="sig-canvas" id="sig-superieur"></canvas>
+          <div class="sig-actions"><button class="btn-clear" onclick="clearSig('sig-superieur')">Effacer</button></div>
+        </div>
+        <div class="field" style="justify-content:flex-end;">
+          <label for="date-signature-sup">Date de signature</label>
+          <input type="date" id="date-signature-sup">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACCUSÉ DE RÉCEPTION -->
+  <div class="card">
+    <div class="card-header">Confirmation d'accusé de réception de l'employé</div>
+    <div class="card-body">
+      <p style="font-size:13px;color:var(--gris-fonce);margin-bottom:16px;line-height:1.6;">
+        Je comprends par la présente ne pas avoir respecté les politiques de l'entreprise et m'engage à changer le comportement fautif dans l'immédiat.
+      </p>
+      <div class="field-row col-2">
+        <div class="sig-zone">
+          <label>Signature de l'employé</label>
+          <canvas class="sig-canvas" id="sig-employe"></canvas>
+          <div class="sig-actions"><button class="btn-clear" onclick="clearSig('sig-employe')">Effacer</button></div>
+        </div>
+        <div class="field" style="justify-content:flex-end;">
+          <label for="date-signature-emp">Date de signature</label>
+          <input type="date" id="date-signature-emp">
+        </div>
+      </div>
+
+      <!-- REFUS -->
+      <div class="refus-row" id="refus-row" onclick="toggleRefus()">
+        <div class="refus-box">
+          <svg width="12" height="10" viewBox="0 0 12 10" fill="none"><polyline points="1,5 4.5,8.5 11,1" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <span class="refus-text">L'employé a refusé de signer le présent avis.</span>
+      </div>
+      <div id="refus-date-container">
+        <div class="field" style="max-width:220px; margin-top:12px;">
+          <label for="date-refus">Date du refus</label>
+          <input type="date" id="date-refus">
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ── CHECKBOX TOGGLE — addEventListener (compatible Teams/iframe) ──
+function initCheckboxes() {
+  // Checkbox items — manquements
+  document.querySelectorAll('.checkbox-item').forEach(item => {
+    // Empêcher les clics sur les éléments enfants de remonter
+    item.querySelectorAll('input, .checkbox-box, svg, polyline').forEach(child => {
+      child.addEventListener('click', e => e.stopPropagation());
+    });
+    item.addEventListener('click', function() {
+      const isAutre = this.dataset.val === 'autre';
+      this.classList.toggle('checked');
+      const cb = this.querySelector('input[type=checkbox]');
+      if (cb) cb.checked = this.classList.contains('checked');
+      if (isAutre) {
+        const c = document.getElementById('autre-container');
+        if (c) c.style.display = this.classList.contains('checked') ? 'block' : 'none';
+      }
+    });
+  });
+
+  // Grade selector
+  document.querySelectorAll('.grade-item').forEach(item => {
+    item.addEventListener('click', function() {
+      document.querySelectorAll('.grade-item').forEach(g => g.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+
+  // Refus de signer
+  const refusRow = document.getElementById('refus-row');
+  if (refusRow) {
+    refusRow.querySelectorAll('input, .refus-box, svg').forEach(child => {
+      child.addEventListener('click', e => e.stopPropagation());
+    });
+    refusRow.addEventListener('click', function() {
+      this.classList.toggle('checked');
+      const dc = document.getElementById('refus-date-container');
+      if (dc) dc.style.display = this.classList.contains('checked') ? 'block' : 'none';
+    });
+  }
+
+  // Terrain toggle
+  const cbTerrain = document.getElementById('cb-terrain');
+  if (cbTerrain) {
+    cbTerrain.addEventListener('change', function() {
+      toggleTerrain(this);
+    });
+  }
+}
+
+// ── CHECKBOX TOGGLE ──
+function toggleCheck(el, event) {
+  if (event && event.target && event.target.tagName === 'INPUT') return;
+  el.classList.toggle('checked');
+  const cb = el.querySelector('input[type=checkbox]');
+  if (cb) cb.checked = el.classList.contains('checked');
+}
+
+function toggleAutre(el) {
+  const c = document.getElementById('autre-container');
+  c.style.display = el.classList.contains('checked') ? 'block' : 'none';
+}
+
+// ── GRADE SELECTOR ──
+function selectGrade(el) {
+  document.querySelectorAll('.grade-item').forEach(g => g.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+// ── REFUS TOGGLE ──
+function toggleRefus() {
+  const row = document.getElementById('refus-row');
+  const dc = document.getElementById('refus-date-container');
+  row.classList.toggle('checked');
+  dc.style.display = row.classList.contains('checked') ? 'block' : 'none';
+}
+
+// ── SIGNATURE CANVAS ──
+function initCanvas(id) {
+  const canvas = document.getElementById(id);
+  const ctx = canvas.getContext('2d');
+  let drawing = false;
+  let lastX = 0, lastY = 0;
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    if (e.touches) {
+      return {
+        x: (e.touches[0].clientX - rect.left) * scaleX,
+        y: (e.touches[0].clientY - rect.top) * scaleY
+      };
+    }
+    return {
+      x: (e.clientX - rect.left) * scaleX,
+      y: (e.clientY - rect.top) * scaleY
+    };
+  }
+
+  function setSize() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.strokeStyle = '#1A1A1A';
+    ctx.lineWidth = 2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  }
+
+  setSize();
+  window.addEventListener('resize', setSize);
+
+  canvas.addEventListener('mousedown', e => { drawing = true; const p = getPos(e); lastX = p.x; lastY = p.y; });
+  canvas.addEventListener('mousemove', e => {
+    if (!drawing) return;
+    const p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    lastX = p.x; lastY = p.y;
+  });
+  canvas.addEventListener('mouseup', () => drawing = false);
+  canvas.addEventListener('mouseleave', () => drawing = false);
+
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; const p = getPos(e); lastX = p.x; lastY = p.y; }, { passive: false });
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (!drawing) return;
+    const p = getPos(e);
+    ctx.beginPath();
+    ctx.moveTo(lastX, lastY);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    lastX = p.x; lastY = p.y;
+  }, { passive: false });
+  canvas.addEventListener('touchend', () => drawing = false);
+}
+
+function clearSig(id) {
+  const canvas = document.getElementById(id);
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+initCanvas('sig-superieur');
+initCanvas('sig-employe');
+initCheckboxes();
+
+// ── SET DEFAULT DATE ──
+const today = new Date().toISOString().split('T')[0];
+document.getElementById('date-avis').value = today;
+document.getElementById('date-signature-sup').value = today;
+document.getElementById('date-signature-emp').value = today;
+
+// ── RESET ──
+function resetForm() {
+  if (!confirm('Réinitialiser le formulaire ? Toutes les données seront perdues.')) return;
+  document.querySelectorAll('input[type=text], textarea').forEach(el => el.value = '');
+  document.querySelectorAll('input.from-m365').forEach(el => el.classList.remove('from-m365'));
+  // Reset terrain toggle
+  const cbTerrain = document.getElementById('cb-terrain');
+  if (cbTerrain) { cbTerrain.checked = false; toggleTerrain(cbTerrain); }
+  const badge = document.getElementById('badge-employe');
+  if (badge) badge.style.display = 'none';
+  document.getElementById('date-avis').value = today;
+  document.getElementById('date-signature-sup').value = today;
+  document.getElementById('date-signature-emp').value = today;
+  document.getElementById('heure-avis').value = '';
+  document.querySelectorAll('.checkbox-item').forEach(el => el.classList.remove('checked'));
+  document.querySelectorAll('.grade-item').forEach(el => el.classList.remove('selected'));
+  document.getElementById('autre-container').style.display = 'none';
+  document.getElementById('refus-row').classList.remove('checked');
+  document.getElementById('refus-date-container').style.display = 'none';
+  clearSig('sig-superieur');
+  clearSig('sig-employe');
+  showToast('Formulaire réinitialisé.', false);
+}
+
+// ── TOAST ──
+function showToast(msg, success = true) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = success ? 'visible success' : 'visible';
+  setTimeout(() => t.className = '', 3200);
+}
+
+// ── EXPORT PDF (print dialog) ──
+function exportPDF() {
+  showToast('Ouverture de la boîte d\'impression…', true);
+  setTimeout(() => window.print(), 600);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// ── CONFIGURATION ──
+// 1. Inscrivez une app dans Azure AD (voir guide) et collez le Client ID ici
+// 2. Remplacez par votre tenant ID (ou 'common' si multi-tenant)
+// 3. Collez l'URL Power Automate après création du flux
+const AZURE_CLIENT_ID    = '8a548c14-a846-45c2-a984-16c4321c63ae';
+const AZURE_TENANT_ID    = '89a0cab0-c64e-4691-8b09-21d41c6db329';
+const POWER_AUTOMATE_URL = 'https://default89a0cab0c64e46918b0921d41c6db3.29.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/d734a233d67247d18cda1147a3eef9b3/triggers/manual/paths/invoke?api-version=1';
+const COURRIEL_RH        = 'rh@signalisationmontreal.ca';
+// ══════════════════════════════════════════════════════════════════
+
+// ── MICROSOFT GRAPH AUTH (MSAL implicite via popup) ──
+let msalInstance = null;
+let graphToken   = null;
+
+async function getGraphToken() {
+  if (graphToken) return graphToken;
+  if (!AZURE_CLIENT_ID) return null; // mode démo
+
+  // Charger MSAL dynamiquement
+  if (!window.msal) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+
+  if (!msalInstance) {
+    msalInstance = new msal.PublicClientApplication({
+      auth: {
+        clientId: AZURE_CLIENT_ID,
+        authority: `https://login.microsoftonline.com/${AZURE_TENANT_ID}`,
+        redirectUri: window.location.origin
+      },
+      cache: { cacheLocation: 'sessionStorage' }
+    });
+    await msalInstance.initialize();
+  }
+
+  try {
+    // Essai silencieux d'abord
+    const accounts = msalInstance.getAllAccounts();
+    if (accounts.length > 0) {
+      const result = await msalInstance.acquireTokenSilent({
+        scopes: ['User.ReadBasic.All'],
+        account: accounts[0]
+      });
+      graphToken = result.accessToken;
+      return graphToken;
+    }
+  } catch {}
+
+  // Popup login
+  try {
+    const result = await msalInstance.loginPopup({ scopes: ['User.ReadBasic.All'] });
+    graphToken = result.accessToken;
+    return graphToken;
+  } catch (e) {
+    console.warn('Auth M365 échouée:', e);
+    return null;
+  }
+}
+
+// ── RECHERCHE GRAPH API ──
+let searchTimers = {};
+
+async function rechercherPersonne(input, role) {
+  const query = input.value.trim();
+  const dropId = `dropdown-${role}`;
+  const drop = document.getElementById(dropId);
+
+  if (query.length < 2) { drop.classList.remove('open'); return; }
+
+  // Debounce 350ms
+  clearTimeout(searchTimers[role]);
+  searchTimers[role] = setTimeout(async () => {
+    drop.innerHTML = `<div class="people-searching"><div class="spinner"></div>Recherche dans Microsoft 365…</div>`;
+    drop.classList.add('open');
+
+    const token = await getGraphToken();
+
+    if (!token) {
+      // Mode démo : résultats fictifs pour tester l'interface
+      afficherResultats(drop, role, getMockResults(query), input);
+      return;
+    }
+
+    try {
+      const url = `https://graph.microsoft.com/v1.0/users?$filter=startswith(displayName,'${encodeURIComponent(query)}') or startswith(givenName,'${encodeURIComponent(query)}') or startswith(surname,'${encodeURIComponent(query)}')&$select=id,displayName,mail,jobTitle,department&$top=8`;
+      const resp = await fetch(url, { headers: { Authorization: `Bearer ${token}` } });
+      if (!resp.ok) throw new Error(resp.status);
+      const data = await resp.json();
+      afficherResultats(drop, role, data.value || [], input);
+    } catch (e) {
+      drop.innerHTML = `<div class="people-searching" style="color:#C8202A;">Erreur de connexion M365 — saisie manuelle disponible</div>`;
+      setTimeout(() => drop.classList.remove('open'), 2500);
+    }
+  }, 350);
+}
+
+function getMockResults(query) {
+  const mocks = [
+    { displayName: 'Jean Tremblay', mail: 'j.tremblay@signalisationmtl.com', jobTitle: 'Opérateur signalisation', department: 'Terrain' },
+    { displayName: 'Marie Gagnon', mail: 'm.gagnon@signalisationmtl.com', jobTitle: 'Contremaître', department: 'Opérations' },
+    { displayName: 'Patrick Bouchard', mail: 'p.bouchard@signalisationmtl.com', jobTitle: 'Technicien', department: 'Maintenance' },
+    { displayName: 'Sylvie Lavoie', mail: 's.lavoie@signalisationmtl.com', jobTitle: 'Coordonnatrice RH', department: 'Ressources humaines' },
+    { displayName: 'Marc-Antoine Roy', mail: 'ma.roy@signalisationmtl.com', jobTitle: 'Superviseur', department: 'Terrain' },
+  ];
+  return mocks.filter(m => m.displayName.toLowerCase().includes(query.toLowerCase()));
+}
+
+function afficherResultats(drop, role, users, input) {
+  if (users.length === 0) {
+    drop.innerHTML = `<div class="people-searching" style="color:#888;">Aucun résultat — continuez la saisie manuellement</div>`;
+    setTimeout(() => drop.classList.remove('open'), 2200);
+    return;
+  }
+
+  drop.innerHTML = users.map((u, i) => {
+    const initiales = (u.displayName || '?').split(' ').map(p => p[0]).join('').slice(0, 2).toUpperCase();
+    const poste = [u.jobTitle, u.department].filter(Boolean).join(' · ') || 'Microsoft 365';
+    return `<div class="people-item" data-idx="${i}" onclick="selectionnerPersonne('${role}', ${JSON.stringify(u).replace(/'/g, "\\'")})"
+      onmouseenter="setActive(this)">
+      <div class="people-avatar">${initiales}</div>
+      <div class="people-info">
+        <div class="people-name">${u.displayName || ''}</div>
+        <div class="people-meta">${u.mail || ''} ${poste ? '· ' + poste : ''}</div>
+      </div>
+    </div>`;
+  }).join('');
+  drop.classList.add('open');
+}
+
+function setActive(el) {
+  el.closest('.people-dropdown').querySelectorAll('.people-item').forEach(i => i.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function navDropdown(e, dropId) {
+  const drop = document.getElementById(dropId);
+  if (!drop.classList.contains('open')) return;
+  const items = [...drop.querySelectorAll('.people-item')];
+  if (!items.length) return;
+  const cur = drop.querySelector('.people-item.active');
+  let idx = items.indexOf(cur);
+  if (e.key === 'ArrowDown')  { e.preventDefault(); idx = Math.min(idx + 1, items.length - 1); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); idx = Math.max(idx - 1, 0); }
+  else if (e.key === 'Enter' && cur) { e.preventDefault(); cur.click(); return; }
+  else if (e.key === 'Escape') { drop.classList.remove('open'); return; }
+  else return;
+  items.forEach(i => i.classList.remove('active'));
+  items[idx] && items[idx].classList.add('active');
+}
+
+function selectionnerPersonne(role, user) {
+  if (role === 'employe') {
+    document.getElementById('nom-employe').value = user.displayName || '';
+    document.getElementById('courriel-employe').value = user.mail || '';
+    document.getElementById('poste').value = user.jobTitle || '';
+    document.getElementById('nom-employe').classList.add('from-m365');
+    document.getElementById('courriel-employe').classList.add('from-m365');
+    const badge = document.getElementById('badge-employe');
+    if (badge) { badge.style.display = 'flex'; }
+  } else {
+    document.getElementById('nom-superieur').value = user.displayName || '';
+    document.getElementById('courriel-superieur').value = user.mail || '';
+    document.getElementById('nom-superieur').classList.add('from-m365');
+    document.getElementById('courriel-superieur').classList.add('from-m365');
+  }
+  document.getElementById(`dropdown-${role}`).classList.remove('open');
+}
+
+// Fermer dropdown si clic ailleurs
+document.addEventListener('click', e => {
+  if (!e.target.closest('.people-picker-wrap')) {
+    document.querySelectorAll('.people-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
+
+// ── TERRAIN TOGGLE ──
+function toggleTerrain(cb) {
+  const courrielField = document.getElementById('courriel-employe');
+  const badge = document.getElementById('badge-employe');
+  if (cb.checked) {
+    courrielField.value = '';
+    courrielField.placeholder = 'Aucun courriel — employé de terrain';
+    courrielField.disabled = true;
+    courrielField.classList.remove('from-m365');
+    if (badge) badge.style.display = 'none';
+  } else {
+    courrielField.disabled = false;
+    courrielField.placeholder = 'Rempli automatiquement ou saisissez manuellement';
+  }
+}
+
+// ── VALIDATION ──
+function validerFormulaire() {
+  const erreurs = [];
+  if (!document.getElementById('nom-employe').value.trim()) erreurs.push('Nom de l\'employé');
+  const estTerrain = document.getElementById('cb-terrain').checked;
+  if (!estTerrain && !document.getElementById('courriel-employe').value.trim()) erreurs.push('Courriel de l\'employé');
+  if (!document.getElementById('poste').value.trim()) erreurs.push('Poste occupé');
+  if (!document.getElementById('nom-superieur').value.trim()) erreurs.push('Nom du supérieur');
+  if (!document.getElementById('courriel-superieur').value.trim()) erreurs.push('Courriel du supérieur');
+  if (!document.getElementById('date-avis').value) erreurs.push('Date');
+  const gradeSelected = document.querySelector('.grade-item.selected');
+  if (!gradeSelected) erreurs.push('Gradation de l\'avis');
+  if (!document.getElementById('description').value.trim()) erreurs.push('Description du manquement');
+  const manquementsCoches = [...document.querySelectorAll('.checkbox-item.checked')];
+  if (manquementsCoches.length === 0) erreurs.push('Au moins un manquement doit être coché');
+  return erreurs;
+}
+
+// ── COLLECTER DONNÉES DU FORMULAIRE ──
+function collecterDonnees() {
+  const manquements = [...document.querySelectorAll('.checkbox-item.checked')]
+    .map(el => el.querySelector('.checkbox-label').textContent.trim());
+  if (document.getElementById('cb-autre').checked && document.getElementById('autre-detail').value.trim()) {
+    const idx = manquements.indexOf('Autre, précisez');
+    if (idx >= 0) manquements[idx] = 'Autre: ' + document.getElementById('autre-detail').value.trim();
+  }
+  const gradeEl = document.querySelector('.grade-item.selected');
+  const gradeMap = { '1': 'Grade 1 – Avis verbal', '2': 'Grade 2 – Avis écrit', '3': 'Grade 3 – Avis écrit (suspension 1j)', '4': 'Grade 4 – Avis écrit (suspension 3j)', '5': 'Congédiement' };
+
+  return {
+    nomEmploye: document.getElementById('nom-employe').value.trim(),
+    courrielEmploye: document.getElementById('cb-terrain').checked
+      ? '(employé de terrain — sans courriel)'
+      : document.getElementById('courriel-employe').value.trim(),
+    employeTerrain: document.getElementById('cb-terrain').checked,
+    poste: document.getElementById('poste').value.trim(),
+    nomSuperieur: document.getElementById('nom-superieur').value.trim(),
+    courrielSuperieur: document.getElementById('courriel-superieur').value.trim(),
+    courrielRH: COURRIEL_RH,
+    date: document.getElementById('date-avis').value,
+    heure: document.getElementById('heure-avis').value,
+    manquements: manquements,
+    grade: gradeEl ? gradeMap[gradeEl.dataset.grade] || '' : '',
+    description: document.getElementById('description').value.trim(),
+    correction: document.getElementById('correction').value.trim(),
+    dateSignatureSuperieur: document.getElementById('date-signature-sup').value,
+    dateSignatureEmploye: document.getElementById('date-signature-emp').value,
+    signatureSuperieur: document.getElementById('sig-superieur').toDataURL('image/png'),
+    signatureEmploye: document.getElementById('sig-employe').toDataURL('image/png'),
+    refusSigner: document.getElementById('refus-row').classList.contains('checked'),
+    dateRefus: document.getElementById('date-refus').value || '',
+    soumisLe: new Date().toISOString()
+  };
+}
+
+// ── SOUMETTRE ──
+async function soumettre() {
+  const erreurs = validerFormulaire();
+  if (erreurs.length > 0) {
+    showToast('⚠ Champs requis : ' + erreurs.join(', '), false);
+    return;
+  }
+
+  if (!POWER_AUTOMATE_URL) {
+    // Mode démo : afficher les données dans la console et confirmer
+    const data = collecterDonnees();
+    console.log('📋 Données du formulaire:', data);
+    showToast('✓ Formulaire validé! (Configurez POWER_AUTOMATE_URL pour l\'envoi réel)', true);
+    showConfirmation(data, false);
+    return;
+  }
+
+  // Envoi réel vers Power Automate
+  const btn = document.querySelector('.btn-success');
+  btn.disabled = true;
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Envoi...</span>';
+
+  try {
+    const data = collecterDonnees();
+    const response = await fetch(POWER_AUTOMATE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+
+    if (response.ok) {
+      showToast('✓ Avis soumis avec succès!', true);
+      showConfirmation(data, true);
+    } else {
+      throw new Error('HTTP ' + response.status);
+    }
+  } catch (err) {
+    showToast('Erreur d\'envoi: ' + err.message, false);
+    console.error(err);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg><span>Soumettre</span>';
+  }
+}
+
+// ── CONFIRMATION POPUP ──
+function showConfirmation(data, envoye) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;display:flex;align-items:center;justify-content:center;';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:8px;padding:32px;max-width:480px;width:90%;box-shadow:0 12px 40px rgba(0,0,0,0.3);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+        <div style="width:42px;height:42px;border-radius:50%;background:${envoye ? '#2a7a3b' : '#1A1A1A'};display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:16px;">${envoye ? 'Avis soumis avec succès' : 'Formulaire validé'}</div>
+          <div style="font-size:12px;color:#6B6B6B;">${new Date().toLocaleDateString('fr-CA', {dateStyle:'long'})}</div>
+        </div>
+      </div>
+      <div style="background:#F5F5F5;border-radius:6px;padding:16px;font-size:13px;line-height:1.8;margin-bottom:20px;">
+        <strong>Employé :</strong> ${data.nomEmploye} (${data.courrielEmploye})<br>
+        <strong>Poste :</strong> ${data.poste}<br>
+        <strong>Supérieur :</strong> ${data.nomSuperieur} (${data.courrielSuperieur})<br>
+        <strong>Grade :</strong> ${data.grade}<br>
+        <strong>Manquement(s) :</strong> ${data.manquements.join(', ') || '–'}<br>
+        ${envoye ? `<strong>Destinataires :</strong> ${data.courrielEmploye}, ${data.courrielSuperieur}, ${data.courrielRH}<br><strong>Statut :</strong> <span style="color:#2a7a3b;font-weight:600;">✓ Enregistré dans SharePoint + courriels envoyés</span>` : '<strong>Statut :</strong> Mode démonstration (URL Power Automate non configurée)'}
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="this.closest('div[style]').remove()" style="font-family:inherit;font-size:13px;font-weight:600;padding:9px 18px;border-radius:4px;border:1.5px solid #D8D8D8;background:#fff;cursor:pointer;">Fermer</button>
+        <button onclick="window.print();this.closest('div[style]').remove();" style="font-family:inherit;font-size:13px;font-weight:600;padding:9px 18px;border-radius:4px;border:none;background:#C8202A;color:#fff;cursor:pointer;">Imprimer copie</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+</script>
+</body>
+</html>

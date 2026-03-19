@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dossier d'embauche – Signalisation de Montréal Inc.</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
+
+:root {
+  --rouge: #C8202A;
+  --rouge-fonce: #9e181f;
+  --rouge-pale: #fdf0f0;
+  --noir: #111111;
+  --gris-fonce: #2D2D2D;
+  --gris: #5A5A5A;
+  --gris-clair: #DEDEDE;
+  --gris-bg: #F7F7F7;
+  --blanc: #FFFFFF;
+  --vert: #1e7a3a;
+  --vert-pale: #edf7f1;
+  --jaune: #d97706;
+  --jaune-pale: #fffbeb;
+  --bleu: #1d6fa4;
+  --radius: 5px;
+  --shadow: 0 2px 10px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--gris-bg);
+  color: var(--noir);
+  font-size: 14px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.app-header {
+  background: var(--noir);
+  border-bottom: 3px solid var(--rouge);
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 200;
+}
+.brand { display: flex; align-items: center; gap: 12px; }
+.logo-badge {
+  width: 40px; height: 40px;
+  background: var(--rouge);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'DM Mono', monospace;
+  font-weight: 500; font-size: 18px;
+  color: #fff; flex-shrink: 0;
+}
+.brand-name { color: #fff; }
+.brand-name .co { font-size: 10px; color: #999; letter-spacing: 0.1em; text-transform: uppercase; }
+.brand-name .title { font-size: 15px; font-weight: 700; }
+.header-right { display: flex; align-items: center; gap: 14px; }
+.mode-toggle {
+  display: flex; align-items: center; gap: 8px;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 20px;
+  padding: 5px 12px;
+  cursor: pointer;
+}
+.mode-toggle input { display: none; }
+.mode-label { font-size: 12px; font-weight: 500; color: #ccc; }
+.mode-label.active { color: var(--rouge); font-weight: 700; }
+.toggle-pip {
+  width: 34px; height: 18px;
+  background: #444;
+  border-radius: 9px;
+  position: relative; cursor: pointer;
+  transition: background 0.2s;
+}
+.toggle-pip::after {
+  content: '';
+  position: absolute;
+  left: 3px; top: 3px;
+  width: 12px; height: 12px;
+  background: #fff; border-radius: 50%;
+  transition: left 0.2s;
+}
+.toggle-pip.rh { background: var(--rouge); }
+.toggle-pip.rh::after { left: 19px; }
+
+/* ── PROGRESS BAR ── */
+.progress-wrap {
+  background: var(--blanc);
+  border-bottom: 1px solid var(--gris-clair);
+  padding: 0 28px;
+  overflow-x: auto;
+}
+.progress-steps {
+  display: flex;
+  gap: 0;
+  min-width: max-content;
+}
+.p-step {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  cursor: pointer;
+  padding: 12px 0;
+  opacity: 0.45;
+  transition: opacity 0.2s;
+  position: relative;
+}
+.p-step.active, .p-step.done { opacity: 1; }
+.p-step-inner {
+  display: flex; align-items: center; gap: 8px;
+  padding: 0 16px;
+  white-space: nowrap;
+}
+.p-step:first-child .p-step-inner { padding-left: 0; }
+.p-num {
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: var(--gris-clair);
+  color: var(--gris);
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: all 0.2s;
+}
+.p-step.active .p-num { background: var(--rouge); color: #fff; }
+.p-step.done .p-num { background: var(--vert); color: #fff; }
+.p-step.done .p-num::after { content: '✓'; font-size: 12px; }
+.p-step.done .p-num-txt { display: none; }
+.p-label { font-size: 12px; font-weight: 600; color: var(--gris-fonce); }
+.p-step.active .p-label { color: var(--rouge); }
+.p-sep { width: 24px; height: 1px; background: var(--gris-clair); flex-shrink: 0; }
+.p-step.active ~ .p-step .p-sep { background: var(--gris-clair); }
+
+/* Active step underline */
+.p-step.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 16px; right: 16px;
+  height: 2px;
+  background: var(--rouge);
+  border-radius: 2px 2px 0 0;
+}
+.p-step:first-child.active::after { left: 0; }
+
+/* ── MAIN ── */
+.main { max-width: 820px; margin: 28px auto; padding: 0 16px 80px; }
+
+/* ── STEP PANELS ── */
+.step-panel { display: none; animation: fadeIn 0.2s ease; }
+.step-panel.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+.step-heading {
+  display: flex; align-items: flex-start; gap: 14px;
+  margin-bottom: 22px;
+}
+.step-icon {
+  width: 44px; height: 44px;
+  background: var(--rouge);
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  color: #fff; font-size: 20px;
+}
+.step-title h2 { font-size: 18px; font-weight: 700; }
+.step-title p { font-size: 13px; color: var(--gris); margin-top: 2px; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--blanc);
+  border-radius: 6px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.card-header {
+  background: var(--noir);
+  color: #fff;
+  padding: 9px 18px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  display: flex; align-items: center; gap: 7px;
+}
+.card-header::before {
+  content: ''; display: block;
+  width: 3px; height: 13px;
+  background: var(--rouge); border-radius: 2px;
+}
+.card-body { padding: 18px; }
+
+/* ── FORM ELEMENTS ── */
+.field { display: flex; flex-direction: column; gap: 5px; }
+label.lbl {
+  font-size: 11px; font-weight: 600;
+  color: var(--gris);
+  text-transform: uppercase; letter-spacing: 0.07em;
+}
+.req { color: var(--rouge); }
+input[type=text], input[type=date], input[type=time],
+input[type=email], input[type=tel], select, textarea {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: var(--noir);
+  background: var(--gris-bg);
+  border: 1.5px solid var(--gris-clair);
+  border-radius: var(--radius);
+  padding: 9px 12px;
+  width: 100%;
+  transition: border-color 0.15s, background 0.15s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--rouge);
+  background: var(--blanc);
+}
+textarea { resize: vertical; min-height: 70px; }
+select { appearance: none; background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%235A5A5A' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+
+.row { display: grid; gap: 12px; margin-bottom: 12px; }
+.col-1 { grid-template-columns: 1fr; }
+.col-2 { grid-template-columns: 1fr 1fr; }
+.col-3 { grid-template-columns: 1fr 1fr 1fr; }
+.col-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.col-2-1 { grid-template-columns: 2fr 1fr; }
+.col-1-2 { grid-template-columns: 1fr 2fr; }
+.col-3-1 { grid-template-columns: 3fr 1fr; }
+
+/* ── CHECKBOX ITEMS ── */
+.cb-group { display: flex; flex-wrap: wrap; gap: 8px; }
+.cb-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 12px;
+  background: var(--gris-bg);
+  border: 1.5px solid var(--gris-clair);
+  border-radius: var(--radius);
+  cursor: pointer; user-select: none;
+  transition: all 0.15s;
+  font-size: 13px; font-weight: 500;
+}
+.cb-item:hover { border-color: var(--rouge); }
+.cb-item.checked { border-color: var(--rouge); background: var(--rouge-pale); }
+.cb-item input { display: none; }
+.cb-box {
+  width: 16px; height: 16px;
+  border: 2px solid var(--gris-clair);
+  border-radius: 3px; background: #fff;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.15s;
+}
+.cb-item.checked .cb-box { background: var(--rouge); border-color: var(--rouge); }
+.cb-item.checked .cb-box::after { content: '✓'; color: #fff; font-size: 10px; font-weight: 700; }
+
+.cb-item input, .cb-item .cb-box,
+.checkbox-item input, .checkbox-item .checkbox-box { pointer-events: none; }
+
+/* Disponibilités grid */
+.dispo-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.dispo-table th { background: var(--gris-bg); padding: 8px 10px; font-size: 11px; font-weight: 700; color: var(--gris); text-transform: uppercase; letter-spacing: 0.06em; border: 1px solid var(--gris-clair); text-align: center; }
+.dispo-table td { border: 1px solid var(--gris-clair); padding: 6px 10px; text-align: center; }
+.dispo-table td:first-child { font-weight: 600; font-size: 12px; color: var(--gris-fonce); text-align: left; }
+.dispo-cell {
+  width: 28px; height: 28px;
+  border: 2px solid var(--gris-clair);
+  border-radius: 4px; background: #fff;
+  cursor: pointer; display: inline-block;
+  transition: all 0.15s; margin: auto;
+}
+.dispo-cell:hover { border-color: var(--rouge); }
+.dispo-cell.on { background: var(--rouge); border-color: var(--rouge); position: relative; }
+.dispo-cell.on::after { content: '✓'; color: #fff; font-size: 12px; font-weight: 700; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+
+/* Language radio */
+.lang-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.lang-label { font-size: 13px; font-weight: 500; min-width: 120px; }
+.lang-opts { display: flex; gap: 6px; }
+.lang-opt {
+  padding: 5px 12px; border-radius: var(--radius);
+  border: 1.5px solid var(--gris-clair);
+  font-size: 12px; font-weight: 600;
+  cursor: pointer; background: var(--gris-bg);
+  transition: all 0.15s; user-select: none;
+}
+.lang-opt.sel { background: var(--rouge); border-color: var(--rouge); color: #fff; }
+
+/* Experience bloc */
+.exp-bloc {
+  background: var(--gris-bg);
+  border: 1.5px solid var(--gris-clair);
+  border-radius: var(--radius);
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.exp-bloc-title {
+  font-size: 12px; font-weight: 700;
+  color: var(--gris); text-transform: uppercase;
+  letter-spacing: 0.07em; margin-bottom: 12px;
+}
+
+/* ── POLITIQUE VIEWER ── */
+.politique-box {
+  background: var(--gris-bg);
+  border: 1.5px solid var(--gris-clair);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  max-height: 320px;
+  overflow-y: auto;
+  font-size: 13px;
+  line-height: 1.7;
+  margin-bottom: 16px;
+  color: var(--gris-fonce);
+}
+.politique-box h3 { font-size: 14px; font-weight: 700; margin: 14px 0 6px; color: var(--noir); }
+.politique-box h3:first-child { margin-top: 0; }
+.politique-box p { margin-bottom: 8px; }
+.politique-box ul { padding-left: 18px; margin-bottom: 8px; }
+.politique-box ul li { margin-bottom: 4px; }
+.politique-scroll-hint {
+  text-align: center; font-size: 11px; color: var(--gris);
+  margin-bottom: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+/* Accusé bloc */
+.accuse-bloc {
+  background: var(--jaune-pale);
+  border: 1.5px solid #fbbf24;
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.accuse-bloc p { margin-bottom: 10px; }
+
+/* ── SIGNATURE ── */
+.sig-wrap { position: relative; }
+canvas.sig-canvas {
+  display: block; width: 100%; height: 110px;
+  background: #fff;
+  border: 1.5px solid var(--gris-clair);
+  border-radius: var(--radius);
+  cursor: crosshair; touch-action: none;
+}
+.sig-clear {
+  position: absolute; top: 6px; right: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px; font-weight: 600;
+  color: var(--gris); background: rgba(255,255,255,0.9);
+  border: 1px solid var(--gris-clair);
+  padding: 3px 9px; border-radius: 3px; cursor: pointer;
+}
+.sig-clear:hover { color: var(--rouge); border-color: var(--rouge); }
+
+/* ── NAVIGATION ── */
+.nav-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-top: 24px; padding-top: 20px;
+  border-top: 1px solid var(--gris-clair);
+}
+.btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px; font-weight: 700;
+  padding: 10px 22px; border-radius: var(--radius);
+  border: none; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 7px;
+  transition: all 0.15s; letter-spacing: 0.02em;
+}
+.btn-ghost { background: transparent; border: 1.5px solid var(--gris-clair); color: var(--gris-fonce); }
+.btn-ghost:hover { border-color: var(--noir); color: var(--noir); }
+.btn-primary { background: var(--rouge); color: #fff; }
+.btn-primary:hover { background: var(--rouge-fonce); }
+.btn-success { background: var(--vert); color: #fff; }
+.btn-success:hover { background: #155e2b; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* RH mode indicator */
+.rh-badge {
+  display: none;
+  background: var(--rouge);
+  color: #fff;
+  font-size: 11px; font-weight: 700;
+  padding: 3px 10px; border-radius: 10px;
+  letter-spacing: 0.05em;
+}
+body.mode-rh .rh-badge { display: inline-block; }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: var(--noir); color: #fff;
+  padding: 12px 20px; border-radius: 6px;
+  font-size: 13px; font-weight: 600;
+  border-left: 3px solid var(--rouge);
+  box-shadow: var(--shadow-lg);
+  opacity: 0; transform: translateY(12px);
+  transition: all 0.25s; pointer-events: none;
+  z-index: 9999; max-width: 320px;
+}
+#toast.show { opacity: 1; transform: translateY(0); }
+#toast.ok { border-left-color: var(--vert); }
+
+/* ── SUMMARY (étape 8) ── */
+.summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.summary-bloc {
+  background: var(--blanc);
+  border: 1.5px solid var(--gris-clair);
+  border-radius: var(--radius);
+  padding: 14px;
+}
+.summary-bloc h4 { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--gris); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+.summary-bloc h4::before { content: ''; width: 3px; height: 12px; background: var(--rouge); border-radius: 2px; }
+.summary-row { display: flex; gap: 6px; font-size: 12px; margin-bottom: 4px; }
+.summary-key { color: var(--gris); min-width: 90px; flex-shrink: 0; }
+.summary-val { font-weight: 500; }
+.policy-checks { display: flex; flex-direction: column; gap: 6px; }
+.policy-check-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.policy-check-item .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--vert); flex-shrink: 0; }
+.policy-check-item .dot.missing { background: var(--rouge); }
+
+/* ── CONFIG ── */
+.config-banner {
+  background: var(--jaune-pale);
+  border: 1.5px solid #fbbf24;
+  border-radius: var(--radius);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #92400e;
+  margin-bottom: 16px;
+  display: flex; align-items: flex-start; gap: 8px;
+}
+
+/* ── PRINT ── */
+@media print {
+  .app-header, .progress-wrap, .nav-bar, #toast, .sig-clear, .config-banner { display: none !important; }
+  .step-panel { display: block !important; page-break-after: always; }
+  .main { max-width: 100%; margin: 0; padding: 0; }
+  .card { box-shadow: none; border: 1px solid #ccc; }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .col-2, .col-3, .col-4, .col-2-1, .col-1-2, .col-3-1 { grid-template-columns: 1fr; }
+  .summary-grid { grid-template-columns: 1fr; }
+  .app-header { padding: 10px 14px; }
+  .progress-wrap { padding: 0 14px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="app-header">
+  <div class="brand">
+    <div class="logo-badge">S</div>
+    <div class="brand-name">
+      <div class="co">Signalisation de Montréal Inc.</div>
+      <div class="title">Dossier d'embauche</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <span class="rh-badge">MODE RH</span>
+    <label class="mode-toggle" title="Basculer entre mode candidat et mode RH">
+      <span class="mode-label active" id="lbl-candidat">Candidat</span>
+      <div class="toggle-pip" id="mode-pip" onclick="toggleMode()"></div>
+      <span class="mode-label" id="lbl-rh">RH</span>
+    </label>
+  </div>
+</header>
+
+<!-- PROGRESS -->
+<div class="progress-wrap">
+  <div class="progress-steps" id="progress-steps">
+    <!-- Steps injected by JS -->
+  </div>
+</div>
+
+<main class="main">
+
+<!-- ══════════════════════════════════════════
+     ÉTAPE 1 — POSTULATION
+════════════════════════════════════════════ -->
+<div class="step-panel active" id="step-1">
+  <div class="step-heading">
+    <div class="step-icon">📋</div>
+    <div class="step-title">
+      <h2>Postulation</h2>
+      <p>Emploi postulé, quart de travail et disponibilité</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Emploi postulé</div>
+    <div class="card-body">
+      <div class="row col-1" style="margin-bottom:10px;">
+        <div class="field">
+          <label class="lbl">Type de poste <span class="req">*</span></label>
+          <div class="cb-group" id="postes">
+            <div class="cb-item" data-val="Journalier"><input type="checkbox"><div class="cb-box"></div>Journalier</div>
+            <div class="cb-item" data-val="Signaleur / Escorte"><input type="checkbox"><div class="cb-box"></div>Signaleur / Escorte</div>
+            <div class="cb-item" data-val="Garage"><input type="checkbox"><div class="cb-box"></div>Garage</div>
+            <div class="cb-item" data-val="Production"><input type="checkbox"><div class="cb-box"></div>Production</div>
+            <div class="cb-item" data-val="AIFV"><input type="checkbox"><div class="cb-box"></div>AIFV</div>
+          </div>
+        </div>
+      </div>
+      <div class="row col-2">
+        <div class="field">
+          <label class="lbl">Quart de travail <span class="req">*</span></label>
+          <div class="cb-group" id="quarts">
+            <div class="cb-item" data-val="Jour"><input type="checkbox"><div class="cb-box"></div>Jour</div>
+            <div class="cb-item" data-val="Nuit"><input type="checkbox"><div class="cb-box"></div>Nuit</div>
+          </div>
+        </div>
+        <div class="field">
+          <label class="lbl">Type d'emploi</label>
+          <div class="cb-group" id="type-emploi">
+            <div class="cb-item" data-val="Temps plein"><input type="checkbox"><div class="cb-box"></div>Temps plein</div>
+            <div class="cb-item" data-val="Emploi d'été"><input type="checkbox"><div class="cb-box"></div>Emploi d'été</div>
+          </div>
+        </div>
+      </div>
+      <div class="row col-2">
+        <div class="field">
+          <label class="lbl">Date de disponibilité <span class="req">*</span></label>
+          <input type="date" id="date-dispo">
+        </div>
+        <div class="field" id="wrap-horodateur">
+          <label class="lbl">Code horodateur (5 chiffres) <span style="color:var(--gris);font-weight:400;">(RH)</span></label>
+          <input type="text" id="horodateur" maxlength="5" placeholder="_ _ _ _ _" style="font-family:'DM Mono',monospace;letter-spacing:0.15em;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="card-rh-embauche" style="display:none;">
+    <div class="card-header">Réservé à l'employeur</div>
+    <div class="card-body">
+      <div class="row col-2">
+        <div class="field">
+          <label class="lbl">Date d'embauche</label>
+          <input type="date" id="date-embauche">
+        </div>
+        <div class="field">
+          <label class="lbl">MOT</label>
+          <input type="text" id="mot" placeholder="Code MOT">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div></div>
+    <button class="btn btn-primary" onclick="goTo(2)">
+      Suivant <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ÉTAPE 2 — IDENTIFICATION
+════════════════════════════════════════════ -->
+<div class="step-panel" id="step-2">
+  <div class="step-heading">
+    <div class="step-icon">👤</div>
+    <div class="step-title">
+      <h2>Identification de l'employé</h2>
+      <p>Informations personnelles et coordonnées</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Informations personnelles</div>
+    <div class="card-body">
+      <div class="row col-3">
+        <div class="field">
+          <label class="lbl">Nom <span class="req">*</span></label>
+          <input type="text" id="nom" placeholder="Nom de famille">
+        </div>
+        <div class="field">
+          <label class="lbl">Prénom <span class="req">*</span></label>
+          <input type="text" id="prenom" placeholder="Prénom">
+        </div>
+        <div class="field">
+          <label class="lbl">Date de naissance <span class="req">*</span></label>
+          <input type="date" id="ddn">
+        </div>
+      </div>
+      <div class="row col-4">
+        <div class="field">
+          <label class="lbl"># App.</label>
+          <input type="text" id="app" placeholder="Apt.">
+        </div>
+        <div class="field">
+          <label class="lbl"># Domicile <span class="req">*</span></label>
+          <input type="text" id="domicile" placeholder="Numéro civique">
+        </div>
+        <div class="field" style="grid-column: span 2;">
+          <label class="lbl">Nom de rue <span class="req">*</span></label>
+          <input type="text" id="rue" placeholder="Nom de la rue">
+        </div>
+      </div>
+      <div class="row col-4">
+        <div class="field" style="grid-column: span 2;">
+          <label class="lbl">Ville <span class="req">*</span></label>
+          <input type="text" id="ville" placeholder="Ville">
+        </div>
+        <div class="field">
+          <label class="lbl">Province</label>
+          <select id="province">
+            <option value="QC" selected>QC</option>
+            <option value="ON">ON</option>
+            <option value="AB">AB</option>
+            <option value="BC">BC</option>
+            <option value="MB">MB</option>
+            <option value="NB">NB</option>
+            <option value="NS">NS</option>
+            <option value="PE">PE</option>
+            <option value="SK">SK</option>
+            <option value="NL">NL</option>
+          </select>
+        </div>
+        <div class="field">
+          <label class="lbl">Code postal <span class="req">*</span></label>
+          <input type="text" id="codepostal" placeholder="A1B 2C3" maxlength="7">
+        </div>
+      </div>
+      <div class="row col-2">
+        <div class="field">
+          <label class="lbl">Téléphone cellulaire <span class="req">*</span></label>
+          <input type="tel" id="telephone" placeholder="(514) 000-0000">
+        </div>
+        <div class="field">
+          <label class="lbl">Courriel <span class="req">*</span></label>
+          <input type="email" id="courriel" placeholder="prenom.nom@exemple.com">
+        </div>
+      </div>
+      <div class="row col-1">
+        <div class="field">
+          <label class="lbl"># Assurance sociale</label>
+          <input type="text" id="nas" placeholder="123 456 789" maxlength="11" style="font-family:'DM Mono',monospace;letter-spacing:0.1em;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-ghost" onclick="goTo(1)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Précédent
+    </button>
+    <button class="btn btn-primary" onclick="goTo(3)">
+      Suivant <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ÉTAPE 3 — COMPÉTENCES & DISPONIBILITÉS
+════════════════════════════════════════════ -->
+<div class="step-panel" id="step-3">
+  <div class="step-heading">
+    <div class="step-icon">🎓</div>
+    <div class="step-title">
+      <h2>Compétences &amp; disponibilités</h2>
+      <p>Permis de conduire, formations, langues et horaires</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Permis de conduire</div>
+    <div class="card-body">
+      <div class="row col-2">
+        <div class="field">
+          <label class="lbl">Possédez-vous un permis?</label>
+          <div class="cb-group" id="permis-oui-non">
+            <div class="cb-item" data-val="Oui"><input type="radio"><div class="cb-box"></div>Oui</div>
+            <div class="cb-item" data-val="Non"><input type="radio"><div class="cb-box"></div>Non</div>
+          </div>
+        </div>
+        <div class="field" id="permis-num-wrap" style="display:none;">
+          <label class="lbl"># Permis</label>
+          <input type="text" id="permis-num" placeholder="Numéro de permis">
+        </div>
+      </div>
+      <div id="permis-classes-wrap" style="display:none; margin-top:10px;">
+        <label class="lbl" style="margin-bottom:8px;display:block;">Classes</label>
+        <div class="cb-group">
+          <div class="cb-item" data-val="Classe 1"><input type="checkbox"><div class="cb-box"></div>Classe 1</div>
+          <div class="cb-item" data-val="Classe 3"><input type="checkbox"><div class="cb-box"></div>Classe 3</div>
+          <div class="cb-item" data-val="Classe 5"><input type="checkbox"><div class="cb-box"></div>Classe 5</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Formations</div>
+    <div class="card-body">
+      <div class="cb-group">
+        <div class="cb-item" data-val="AQTR STC 101"><input type="checkbox"><div class="cb-box"></div>AQTR STC 101</div>
+        <div class="cb-item" data-val="AQTR STC 102"><input type="checkbox"><div class="cb-box"></div>AQTR STC 102</div>
+        <div class="cb-item" data-val="AQTR STC 201"><input type="checkbox"><div class="cb-box"></div>AQTR STC 201</div>
+        <div class="cb-item" data-val="Signaleur AQTR"><input type="checkbox"><div class="cb-box"></div>Signaleur AQTR</div>
+        <div class="cb-item" data-val="Cariste"><input type="checkbox"><div class="cb-box"></div>Cariste</div>
+        <div class="cb-item" data-val="Nacelle"><input type="checkbox"><div class="cb-box"></div>Nacelle</div>
+        <div class="cb-item" data-val="Secouriste"><input type="checkbox"><div class="cb-box"></div>Secouriste</div>
+        <div class="cb-item" data-val="SIMDUT"><input type="checkbox"><div class="cb-box"></div>SIMDUT</div>
+        <div class="cb-item" data-val="ASP Construction"><input type="checkbox"><div class="cb-box"></div>ASP Construction</div>
+        <div class="cb-item" data-val="TMD"><input type="checkbox"><div class="cb-box"></div>TMD</div>
+        <div class="cb-item" data-val="Autre"><input type="checkbox"><div class="cb-box"></div>Autre</div>
+      </div>
+      <div id="formation-autre-wrap" style="display:none;margin-top:10px;">
+        <div class="field">
+          <label class="lbl">Précisez</label>
+          <input type="text" id="formation-autre" placeholder="Autre formation...">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Niveau de langue</div>
+    <div class="card-body">
+      <div class="lang-row">
+        <span class="lang-label">Français écrit</span>
+        <div class="lang-opts" id="lang-fr-ecrit">
+          <div class="lang-opt" onclick="selectLang(this, 'lang-fr-ecrit', 'Faible')">Faible</div>
+          <div class="lang-opt" onclick="selectLang(this, 'lang-fr-ecrit', 'Bon')">Bon</div>
+          <div class="lang-opt" onclick="selectLang(this, 'lang-fr-ecrit', 'Excellent')">Excellent</div>
+        </div>
+      </div>
+      <div class="lang-row">
+        <span class="lang-label">Français parlé</span>
+        <div class="lang-opts" id="lang-fr-parle">
+          <div class="lang-opt" onclick="selectLang(this, 'lang-fr-parle', 'Faible')">Faible</div>
+          <div class="lang-opt" onclick="selectLang(this, 'lang-fr-parle', 'Bon')">Bon</div>
+          <div class="lang-opt" onclick="selectLang(this, 'lang-fr-parle', 'Excellent')">Excellent</div>
+        </div>
+      </div>
+      <div class="lang-row">
+        <span class="lang-label">Anglais parlé</span>
+        <div class="lang-opts" id="lang-en-parle">
+          <div class="lang-opt" onclick="selectLang(this, 'lang-en-parle', 'Faible')">Faible</div>
+          <div class="lang-opt" onclick="selectLang(this, 'lang-en-parle', 'Bon')">Bon</div>
+          <div class="lang-opt" onclick="selectLang(this, 'lang-en-parle', 'Excellent')">Excellent</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Disponibilités</div>
+    <div class="card-body">
+      <table class="dispo-table">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Lundi</th><th>Mardi</th><th>Mercredi</th><th>Jeudi</th><th>Vendredi</th><th>Samedi</th><th>Dimanche</th>
+          </tr>
+        </thead>
+        <tbody id="dispo-tbody">
+          <!-- injected by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-ghost" onclick="goTo(2)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Précédent</button>
+    <button class="btn btn-primary" onclick="goTo(4)">Suivant <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ÉTAPE 4 — EXPÉRIENCE & FORMATION ACADÉMIQUE
+════════════════════════════════════════════ -->
+<div class="step-panel" id="step-4">
+  <div class="step-heading">
+    <div class="step-icon">💼</div>
+    <div class="step-title">
+      <h2>Expérience &amp; formation académique</h2>
+      <p>Parcours professionnel et scolaire</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Formation académique</div>
+    <div class="card-body">
+      <div id="formations-academiques">
+        <div class="exp-bloc">
+          <div class="row col-4">
+            <div class="field">
+              <label class="lbl">Niveau</label>
+              <select><option value="">--</option><option>Secondaire</option><option>DEP</option><option>Collégial</option><option>Universitaire</option><option>Autre</option></select>
+            </div>
+            <div class="field" style="grid-column:span 2;">
+              <label class="lbl">Nom de l'institution</label>
+              <input type="text" placeholder="Ex: École XYZ">
+            </div>
+            <div class="field">
+              <label class="lbl">Année diplôme</label>
+              <input type="text" placeholder="2020" maxlength="4">
+            </div>
+          </div>
+          <div class="row col-1" style="margin-bottom:0;">
+            <div class="field">
+              <label class="lbl">Nature des cours</label>
+              <input type="text" placeholder="Ex: Électromécanique, Administration...">
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" style="margin-top:4px;" onclick="addFormAcad()">+ Ajouter une formation</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Expérience de travail</div>
+    <div class="card-body">
+      <div id="experiences">
+        <div class="exp-bloc">
+          <div class="exp-bloc-title">Employeur #1</div>
+          <div class="row col-3">
+            <div class="field">
+              <label class="lbl">Nom de l'employeur</label>
+              <input type="text" placeholder="Nom de l'entreprise">
+            </div>
+            <div class="field">
+              <label class="lbl">Type d'entreprise</label>
+              <input type="text" placeholder="Ex: Construction, Transport...">
+            </div>
+            <div class="field">
+              <label class="lbl">Poste occupé</label>
+              <input type="text" placeholder="Titre du poste">
+            </div>
+          </div>
+          <div class="row col-4">
+            <div class="field">
+              <label class="lbl">De</label>
+              <input type="date">
+            </div>
+            <div class="field">
+              <label class="lbl">À</label>
+              <input type="date">
+            </div>
+            <div class="field">
+              <label class="lbl">Supérieur immédiat</label>
+              <input type="text" placeholder="Nom">
+            </div>
+            <div class="field">
+              <label class="lbl"># Téléphone</label>
+              <input type="tel" placeholder="(514) 000-0000">
+            </div>
+          </div>
+          <div class="row col-3" style="margin-bottom:0;">
+            <div class="field">
+              <label class="lbl">Raison du départ</label>
+              <input type="text" placeholder="Ex: Fin de contrat...">
+            </div>
+            <div class="field">
+              <label class="lbl">Salaire</label>
+              <input type="text" placeholder="Ex: 22$/h">
+            </div>
+            <div class="field">
+              <label class="lbl">Fonctions et responsabilités</label>
+              <input type="text" placeholder="Résumé...">
+            </div>
+          </div>
+        </div>
+      </div>
+      <button class="btn btn-ghost" style="margin-top:4px;" onclick="addExp()">+ Ajouter un employeur</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Renseignements généraux &amp; antécédents</div>
+    <div class="card-body">
+      <div style="padding:12px;background:var(--gris-bg);border-radius:var(--radius);margin-bottom:14px;">
+        <p style="font-size:13px;margin-bottom:10px;">Avez-vous déjà eu un accident de travail ou une maladie professionnelle pouvant vous empêcher d'effectuer certaines tâches reliées à l'emploi?</p>
+        <div class="cb-group" id="accident-oui-non">
+          <div class="cb-item" data-val="Oui"><input type="radio"><div class="cb-box"></div>Oui</div>
+          <div class="cb-item" data-val="Non"><input type="radio"><div class="cb-box"></div>Non</div>
+        </div>
+        <div id="accident-details" style="display:none; margin-top:10px;" class="row col-2">
+          <div class="field">
+            <label class="lbl">Nature et date</label>
+            <input type="text" id="accident-nature" placeholder="Nature et quand?">
+          </div>
+          <div class="field">
+            <label class="lbl">Durée d'arrêt de travail</label>
+            <input type="text" id="accident-duree" placeholder="Ex: 3 semaines">
+          </div>
+        </div>
+      </div>
+      <div style="padding:12px;background:var(--gris-bg);border-radius:var(--radius);">
+        <p style="font-size:13px;margin-bottom:10px;">Avez-vous déjà été déclaré coupable d'une infraction criminelle ou pénale ayant un lien avec l'emploi postulé ET pour laquelle vous n'avez pas obtenu de pardon?</p>
+        <div class="cb-group" id="judiciaire-oui-non">
+          <div class="cb-item" data-val="Oui" onclick="toggleRadio(this, 'judiciaire-oui-non')"><input type="radio"><div class="cb-box"></div>Oui</div>
+          <div class="cb-item" data-val="Non" onclick="toggleRadio(this, 'judiciaire-oui-non')"><input type="radio"><div class="cb-box"></div>Non</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-ghost" onclick="goTo(3)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Précédent</button>
+    <button class="btn btn-primary" onclick="goTo(5)">Suivant <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ÉTAPE 5 — CONTACTS D'URGENCE
+════════════════════════════════════════════ -->
+<div class="step-panel" id="step-5">
+  <div class="step-heading">
+    <div class="step-icon">🚨</div>
+    <div class="step-title">
+      <h2>Contacts en cas d'urgence</h2>
+      <p>Minimum un contact requis</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div id="contacts-urgence">
+        <!-- Contact 1 -->
+        <div class="exp-bloc" id="contact-1">
+          <div class="exp-bloc-title">Contact #1</div>
+          <div class="row col-2">
+            <div class="field"><label class="lbl">Nom complet <span class="req">*</span></label><input type="text" class="c-nom" placeholder="Prénom Nom"></div>
+            <div class="field"><label class="lbl">Lien <span class="req">*</span></label><input type="text" class="c-lien" placeholder="Ex: Conjoint(e), Parent..."></div>
+          </div>
+          <div class="row col-3" style="margin-bottom:0;">
+            <div class="field"><label class="lbl">Tél. résidence</label><input type="tel" class="c-res" placeholder="(514) 000-0000"></div>
+            <div class="field"><label class="lbl">Tél. cellulaire</label><input type="tel" class="c-cell" placeholder="(514) 000-0000"></div>
+            <div class="field"><label class="lbl">Tél. autre</label><input type="tel" class="c-autre" placeholder="(514) 000-0000"></div>
+          </div>
+        </div>
+        <!-- Contact 2 -->
+        <div class="exp-bloc" id="contact-2">
+          <div class="exp-bloc-title">Contact #2 <span style="font-weight:400;color:var(--gris);">(optionnel)</span></div>
+          <div class="row col-2">
+            <div class="field"><label class="lbl">Nom complet</label><input type="text" class="c-nom" placeholder="Prénom Nom"></div>
+            <div class="field"><label class="lbl">Lien</label><input type="text" class="c-lien" placeholder="Ex: Ami(e), Frère..."></div>
+          </div>
+          <div class="row col-3" style="margin-bottom:0;">
+            <div class="field"><label class="lbl">Tél. résidence</label><input type="tel" class="c-res" placeholder="(514) 000-0000"></div>
+            <div class="field"><label class="lbl">Tél. cellulaire</label><input type="tel" class="c-cell" placeholder="(514) 000-0000"></div>
+            <div class="field"><label class="lbl">Tél. autre</label><input type="tel" class="c-autre" placeholder="(514) 000-0000"></div>
+          </div>
+        </div>
+        <!-- Contact 3 -->
+        <div class="exp-bloc" id="contact-3">
+          <div class="exp-bloc-title">Contact #3 <span style="font-weight:400;color:var(--gris);">(optionnel)</span></div>
+          <div class="row col-2">
+            <div class="field"><label class="lbl">Nom complet</label><input type="text" class="c-nom" placeholder="Prénom Nom"></div>
+            <div class="field"><label class="lbl">Lien</label><input type="text" class="c-lien" placeholder="Ex: Collègue..."></div>
+          </div>
+          <div class="row col-3" style="margin-bottom:0;">
+            <div class="field"><label class="lbl">Tél. résidence</label><input type="tel" class="c-res" placeholder="(514) 000-0000"></div>
+            <div class="field"><label class="lbl">Tél. cellulaire</label><input type="tel" class="c-cell" placeholder="(514) 000-0000"></div>
+            <div class="field"><label class="lbl">Tél. autre</label><input type="tel" class="c-autre" placeholder="(514) 000-0000"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-ghost" onclick="goTo(4)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Précédent</button>
+    <button class="btn btn-primary" onclick="goTo(6)">Suivant <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ÉTAPE 6 — POLITIQUES (lecture + accusé)
+════════════════════════════════════════════ -->
+<div class="step-panel" id="step-6">
+  <div class="step-heading">
+    <div class="step-icon">📜</div>
+    <div class="step-title">
+      <h2>Politiques de l'entreprise</h2>
+      <p>Lire chaque politique et signer l'accusé de réception</p>
+    </div>
+  </div>
+
+  <!-- POLITIQUE 1 : DROGUES -->
+  <div class="card">
+    <div class="card-header">1 — Politique de tolérance zéro : drogues, alcool et médicaments</div>
+    <div class="card-body">
+      <div class="politique-scroll-hint">📖 Faites défiler pour lire la politique complète avant de signer</div>
+      <div class="politique-box">
+        <h3>Énoncé de la politique</h3>
+        <p>L'employeur applique une politique de tolérance zéro quant à la consommation, l'usage, la possession, la vente ou la distribution de drogue, incluant le cannabis et ses dérivés, l'alcool, les médicaments ou d'autres substances similaires, sur les lieux de travail.</p>
+        <h3>1. Objectif</h3>
+        <p>La présente politique a pour but de protéger la santé, la sécurité et l'intégrité physique des employés et des autres personnes présentes sur les lieux de travail, de prévenir les risques associés à la consommation de drogues, d'alcool ou de médicaments, d'énoncer des règles claires et de préciser les rôles et responsabilités.</p>
+        <h3>2. Application</h3>
+        <p>La politique s'applique à tous les employés, peu importe leur niveau hiérarchique, et sur tous les lieux de travail : bureaux, garages, entrepôts, véhicules de l'entreprise et chantiers routiers.</p>
+        <h3>3. Interdiction</h3>
+        <ul>
+          <li>Avoir les facultés affaiblies pendant les heures de travail;</li>
+          <li>Se présenter au travail sous l'influence de toute substance;</li>
+          <li>Consommer, vendre ou distribuer ces substances sur les lieux de travail.</li>
+        </ul>
+        <h3>4. Obligations de l'employé</h3>
+        <ul>
+          <li>Respecter la politique et collaborer à son application;</li>
+          <li>Informer l'employeur s'il est aux prises avec un trouble lié à l'usage de substances;</li>
+          <li>Signaler tout employé travaillant avec les facultés affaiblies.</li>
+        </ul>
+        <h3>5. Mesures disciplinaires</h3>
+        <p>Le non-respect de la présente politique expose l'employé à des mesures disciplinaires pouvant aller jusqu'au congédiement sans préavis. En vigueur depuis le 6 janvier 2025.</p>
+      </div>
+      <div class="accuse-bloc">
+        <p><strong>Accusé de réception :</strong> L'employé reconnaît avoir reçu un exemplaire de la <em>Politique de tolérance zéro sur la consommation ou la vente de drogues, d'alcool, de médicaments et d'autres substances au travail</em>, l'avoir lue, comprise et en accepter les conditions.</p>
+        <div class="row col-2" style="margin-bottom:0;">
+          <div class="field">
+            <label class="lbl">Signature de l'employé</label>
+            <div class="sig-wrap">
+              <canvas class="sig-canvas" id="sig-drogues"></canvas>
+              <button class="sig-clear" onclick="clearSig('sig-drogues')">Effacer</button>
+            </div>
+          </div>
+          <div class="field">
+            <label class="lbl">Signature de l'employeur <span style="font-weight:400;color:var(--gris);">(RH)</span></label>
+            <div class="sig-wrap">
+              <canvas class="sig-canvas" id="sig-drogues-emp"></canvas>
+              <button class="sig-clear" onclick="clearSig('sig-drogues-emp')">Effacer</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POLITIQUE 2 : FUMÉE -->
+  <div class="card">
+    <div class="card-header">2 — Politique milieu de travail sans fumée</div>
+    <div class="card-body">
+      <div class="politique-scroll-hint">📖 Faites défiler pour lire la politique complète avant de signer</div>
+      <div class="politique-box">
+        <h3>Énoncé de la politique</h3>
+        <p>Signalisation de Montréal inc. veut offrir un environnement sain et sécuritaire à tous ses employés. La présente politique ne doit pas être perçue comme une mesure de coercition, mais avant tout comme une mesure de prévention.</p>
+        <h3>1. Objectif</h3>
+        <p>Protéger la santé des employés, minimiser les risques de la fumée secondaire, sensibiliser les fumeurs aux dangers du tabac et réduire les risques d'incendies, de brûlures et d'explosions.</p>
+        <h3>2. Interdiction</h3>
+        <ul>
+          <li>Dans tous les locaux fermés (bureaux, garages, entrepôts);</li>
+          <li>Dans un rayon de <strong>9 mètres</strong> de toute porte d'entrée;</li>
+          <li>Dans tous les véhicules de l'entreprise;</li>
+          <li>À proximité de matières combustibles ou de sources d'inflammation.</li>
+          <li>L'abandon de mégots est également interdit.</li>
+        </ul>
+        <p>Au sens de la présente politique, «fumer» inclut l'usage de la cigarette électronique.</p>
+        <h3>3. Sanctions</h3>
+        <p>L'employé qui ne respecte pas la politique s'expose à des mesures disciplinaires pouvant aller jusqu'au congédiement. En vigueur depuis le 6 janvier 2025.</p>
+      </div>
+      <div class="accuse-bloc">
+        <p><strong>Accusé de réception :</strong> L'employé reconnaît avoir reçu un exemplaire de la <em>Politique milieu de travail sans fumée</em>, l'avoir lue, comprise et en accepter les conditions.</p>
+        <div class="row col-2" style="margin-bottom:0;">
+          <div class="field">
+            <label class="lbl">Signature de l'employé</label>
+            <div class="sig-wrap"><canvas class="sig-canvas" id="sig-fumee"></canvas><button class="sig-clear" onclick="clearSig('sig-fumee')">Effacer</button></div>
+          </div>
+          <div class="field">
+            <label class="lbl">Signature de l'employeur <span style="font-weight:400;color:var(--gris);">(RH)</span></label>
+            <div class="sig-wrap"><canvas class="sig-canvas" id="sig-fumee-emp"></canvas><button class="sig-clear" onclick="clearSig('sig-fumee-emp')">Effacer</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- POLITIQUE 3 : HARCÈLEMENT -->
+  <div class="card">
+    <div class="card-header">3 — Politique de tolérance zéro : harcèlement psychologique et violence sexuelle</div>
+    <div class="card-body">
+      <div class="politique-scroll-hint">📖 Faites défiler pour lire la politique complète avant de signer</div>
+      <div class="politique-box">
+        <h3>1. Objectifs</h3>
+        <p>Signalisation de Montréal Inc. s'engage à ne tolérer aucune forme de harcèlement psychologique ou sexuel et à assurer à tous un milieu de travail respectueux et sécuritaire, exempt de toute violence, menace verbale, physique, psychologique ou sexuelle.</p>
+        <h3>2. Définition</h3>
+        <p>Le harcèlement psychologique est une conduite vexatoire se manifestant par des comportements, des paroles, des actes ou des gestes répétés, hostiles ou non désirés, portant atteinte à la dignité ou à l'intégrité psychologique du salarié. Une seule conduite grave peut aussi constituer du harcèlement psychologique.</p>
+        <h3>3. Principes directeurs</h3>
+        <ul>
+          <li>Aucune personne dénonçant une situation ne subira de représailles;</li>
+          <li>Tout type de harcèlement est strictement interdit;</li>
+          <li>L'employeur fournit le soutien nécessaire aux victimes.</li>
+        </ul>
+        <h3>4. Personne-ressource</h3>
+        <p><strong>Josée Corbeil</strong>, Directrice des ressources humaines<br>Tél. : 514 701-4364 | <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d7bdb8a4b2b2f9b4b8a5b5b2bebb97a4beb0b9b6bbbea4b6a3beb8b9bab8b9a3a5b2b6bbf9b4b6">[email&#160;protected]</a></p>
+        <h3>5. Sanctions</h3>
+        <p>Tout manquement à la politique peut entraîner des sanctions disciplinaires pouvant aller jusqu'au congédiement.</p>
+      </div>
+      <div class="accuse-bloc">
+        <p><strong>Accusé de réception :</strong> Je (lettres moulées) _________________________________________ accuse réception de la politique pour contrer la violence et le harcèlement en milieu de travail. Je déclare avoir lu cette politique, en avoir bien compris le contenu et être conscient(e) que tout entrave peut entraîner des sanctions pouvant aller jusqu'au congédiement.</p>
+        <div class="row col-1" style="margin-bottom:10px;">
+          <div class="field">
+            <label class="lbl">Nom en lettres moulées</label>
+            <input type="text" id="har-nom-moule" placeholder="NOM PRÉNOM en majuscules" style="font-family:'DM Mono',monospace;text-transform:uppercase;letter-spacing:0.08em;">
+          </div>
+        </div>
+        <div class="row col-2" style="margin-bottom:0;">
+          <div class="field">
+            <label class="lbl">Signature de l'employé</label>
+            <div class="sig-wrap"><canvas class="sig-canvas" id="sig-harcelement"></canvas><button class="sig-clear" onclick="clearSig('sig-harcelement')">Effacer</button></div>
+          </div>
+          <div class="field">
+            <label class="lbl">Signé à / le</label>
+            <div class="row col-2" style="margin-bottom:0;">
+              <input type="text" id="har-lieu" placeholder="Lachine">
+              <input type="date" id="har-date">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-ghost" onclick="goTo(5)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Précédent</button>
+    <button class="btn btn-primary" onclick="goTo(7)">Suivant <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ÉTAPE 7 — DÉCLARATIONS & ENGAGEMENT
+════════════════════════════════════════════ -->
+<div class="step-panel" id="step-7">
+  <div class="step-heading">
+    <div class="step-icon">✍️</div>
+    <div class="step-title">
+      <h2>Déclarations &amp; engagements</h2>
+      <p>Politique cellulaires, dossier de conduite, frais de formation et signature finale</p>
+    </div>
+  </div>
+
+  <!-- CELLULAIRES -->
+  <div class="card">
+    <div class="card-header">Politique sur les cellulaires</div>
+    <div class="card-body">
+      <div class="politique-box" style="max-height:180px;">
+        <p>Dans un esprit de sécurité, Signalisation de Montréal inc. exige que les téléphones cellulaires sur ses chantiers soient utilisés uniquement pour le travail ou pour une urgence.</p>
+        <ul>
+          <li>Le travailleur doit cesser toutes manœuvres lorsqu'il est au téléphone;</li>
+          <li>Aucune utilisation personnelle n'est permise;</li>
+          <li>Le non-respect entraîne des sanctions selon la gradation des sanctions de l'entreprise.</li>
+        </ul>
+      </div>
+      <div class="accuse-bloc">
+        <p>Je comprends et accepte les règlements de Signalisation de Montréal inc. et je m'engage à les respecter.</p>
+        <div class="row col-2" style="margin-bottom:0;">
+          <div class="field">
+            <label class="lbl">Signature</label>
+            <div class="sig-wrap"><canvas class="sig-canvas" id="sig-cellulaire"></canvas><button class="sig-clear" onclick="clearSig('sig-cellulaire')">Effacer</button></div>
+          </div>
+          <div class="field">
+            <label class="lbl">Date</label>
+            <input type="date" id="date-cellulaire">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOSSIER DE CONDUITE -->
+  <div class="card">
+    <div class="card-header">Dossier de conduite</div>
+    <div class="card-body">
+      <div class="politique-box" style="max-height:200px;">
+        <p>Je m'engage à aviser mon employeur suite à la suspension ou la révocation de mon permis de conduire (loi 519.9, décret 1421-91, article 54 du Code civil du Québec).</p>
+        <ul>
+          <li>Tout employé laissant conduire un véhicule de l'entreprise à une personne non autorisée sera entièrement responsable;</li>
+          <li>Le véhicule fourni ne doit être utilisé qu'à des fins de travail;</li>
+          <li><strong>Il est strictement interdit de conduire avec les facultés affaiblies, un permis suspendu, révoqué ou sans permis. Ceci entraîne un congédiement immédiat.</strong></li>
+        </ul>
+      </div>
+      <div class="accuse-bloc">
+        <p>Je comprends et accepte les règlements de Signalisation de Montréal inc. et je m'engage à les respecter.</p>
+        <div class="row col-2" style="margin-bottom:0;">
+          <div class="field">
+            <label class="lbl">Signature + Initiales</label>
+            <div class="sig-wrap"><canvas class="sig-canvas" id="sig-conduite"></canvas><button class="sig-clear" onclick="clearSig('sig-conduite')">Effacer</button></div>
+          </div>
+          <div class="field">
+            <label class="lbl">Date</label>
+            <input type="date" id="date-conduite">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FRAIS DE FORMATION -->
+  <div class="card">
+    <div class="card-header">Remboursement des frais de formation</div>
+    <div class="card-body">
+      <div class="politique-box" style="max-height:200px;">
+        <p>Signalisation de Montréal facilite l'accessibilité à un emploi en offrant la formation Journalier installateur et Signaleur routier par l'AQTR.</p>
+        <p>Vous devrez rembourser les frais de formation si votre fin d'emploi survient dans les six (6) premiers mois :</p>
+        <ul>
+          <li><strong>0 à 3 mois :</strong> remboursement complet des frais;</li>
+          <li><strong>3 à 6 mois :</strong> remboursement de 50% des frais.</li>
+        </ul>
+        <p>Le remboursement doit être versé dans les 10 jours de la fin d'emploi, à même la dernière paie.</p>
+      </div>
+      <div class="accuse-bloc">
+        <p>J'accepte les conditions proposées et j'ai signé à Lachine, province de Québec.</p>
+        <div class="row col-2">
+          <div class="field">
+            <label class="lbl">Date d'acceptation</label>
+            <input type="date" id="date-formation">
+          </div>
+        </div>
+        <div class="row col-2" style="margin-bottom:0;">
+          <div class="field">
+            <label class="lbl">Signature de l'employé(e)</label>
+            <div class="sig-wrap"><canvas class="sig-canvas" id="sig-formation"></canvas><button class="sig-clear" onclick="clearSig('sig-formation')">Effacer</button></div>
+          </div>
+          <div class="field">
+            <label class="lbl">Représentant(e) de l'employeur <span style="font-weight:400;color:var(--gris);">(RH)</span></label>
+            <div class="sig-wrap"><canvas class="sig-canvas" id="sig-formation-emp"></canvas><button class="sig-clear" onclick="clearSig('sig-formation-emp')">Effacer</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGNATURE FINALE DEMANDE D'EMPLOI -->
+  <div class="card">
+    <div class="card-header">Attestation — Demande d'emploi</div>
+    <div class="card-body">
+      <div class="accuse-bloc">
+        <p>Par la présente signature, j'atteste que tous les renseignements fournis sont complets et conformes à la réalité. Toute fausse déclaration peut entraîner l'annulation d'une offre ou un renvoi immédiat. Je consens à autoriser Signalisation de Montréal Inc. à communiquer avec mes employeurs anciens ou actuels. J'accepte de me soumettre à un examen médical incluant un test de dépistage de drogue, si nécessaire.</p>
+      </div>
+      <div class="row col-2" style="margin-bottom:0;">
+        <div class="field">
+          <label class="lbl">Signature de l'employé(e) <span class="req">*</span></label>
+          <div class="sig-wrap"><canvas class="sig-canvas" id="sig-finale"></canvas><button class="sig-clear" onclick="clearSig('sig-finale')">Effacer</button></div>
+        </div>
+        <div class="field">
+          <label class="lbl">Date <span class="req">*</span></label>
+          <input type="date" id="date-finale">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-ghost" onclick="goTo(6)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Précédent</button>
+    <button class="btn btn-primary" onclick="goTo(8)">Réviser et soumettre <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     ÉTAPE 8 — RÉVISION & SOUMISSION
+════════════════════════════════════════════ -->
+<div class="step-panel" id="step-8">
+  <div class="step-heading">
+    <div class="step-icon">✅</div>
+    <div class="step-title">
+      <h2>Révision &amp; soumission</h2>
+      <p>Vérifiez les informations avant de soumettre le dossier</p>
+    </div>
+  </div>
+
+  <div class="config-banner" style="background:var(--vert-pale);border-color:#6ee7a0;">
+    ✅ <span style="color:#155e2b;">Tous les paramètres sont configurés — Azure AD, Power Automate et courriel RH sont prêts.</span>
+  </div>
+
+  <div id="summary-content" class="summary-grid">
+    <!-- Injected by JS -->
+  </div>
+
+  <div class="card" style="margin-top:16px;">
+    <div class="card-header">Politiques signées</div>
+    <div class="card-body">
+      <div class="policy-checks" id="policy-checks">
+        <!-- Injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <button class="btn btn-ghost" onclick="goTo(7)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Précédent</button>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-ghost" onclick="window.print()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+        Imprimer
+      </button>
+      <button class="btn btn-success" onclick="soumettre()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Soumettre le dossier
+      </button>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<div id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ══════════════════════════════════════════
+// CONFIGURATION
+// ══════════════════════════════════════════
+const AZURE_CLIENT_ID    = '8a548c14-a846-45c2-a984-16c4321c63ae';
+const AZURE_TENANT_ID    = '89a0cab0-c64e-4691-8b09-21d41c6db329';
+const POWER_AUTOMATE_URL = 'https://default89a0cab0c64e46918b0921d41c6db3.29.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/d734a233d67247d18cda1147a3eef9b3/triggers/manual/paths/invoke?api-version=1'; // ← URL Power Automate configurée
+const COURRIEL_RH = 'rh@signalisationmontreal.ca';
+
+// ── MICROSOFT GRAPH AUTH (MSAL) ──
+let msalInstance = null;
+let graphToken = null;
+
+async function getGraphToken() {
+  if (graphToken) return graphToken;
+  if (!AZURE_CLIENT_ID) return null;
+  if (!window.msal) {
+    await new Promise((res, rej) => {
+      const s = document.createElement('script');
+      s.src = 'https://alcdn.msauth.net/browser/2.38.3/js/msal-browser.min.js';
+      s.onload = res; s.onerror = rej;
+      document.head.appendChild(s);
+    });
+  }
+  if (!msalInstance) {
+    msalInstance = new msal.PublicClientApplication({
+      auth: {
+        clientId: AZURE_CLIENT_ID,
+        authority: `https://login.microsoftonline.com/${AZURE_TENANT_ID}`,
+        redirectUri: window.location.origin
+      },
+      cache: { cacheLocation: 'sessionStorage' }
+    });
+    await msalInstance.initialize();
+  }
+  try {
+    const accounts = msalInstance.getAllAccounts();
+    if (accounts.length > 0) {
+      const result = await msalInstance.acquireTokenSilent({ scopes: ['User.ReadBasic.All'], account: accounts[0] });
+      graphToken = result.accessToken;
+      return graphToken;
+    }
+  } catch {}
+  try {
+    const result = await msalInstance.loginPopup({ scopes: ['User.ReadBasic.All'] });
+    graphToken = result.accessToken;
+    return graphToken;
+  } catch (e) {
+    console.warn('Auth M365 échouée:', e);
+    return null;
+  }
+}
+
+// ══════════════════════════════════════════
+// STEPS CONFIG
+// ══════════════════════════════════════════
+const STEPS = [
+  { num: 1, label: 'Postulation' },
+  { num: 2, label: 'Identification' },
+  { num: 3, label: 'Compétences' },
+  { num: 4, label: 'Expérience' },
+  { num: 5, label: 'Urgence' },
+  { num: 6, label: 'Politiques' },
+  { num: 7, label: 'Déclarations' },
+  { num: 8, label: 'Soumettre' },
+];
+let currentStep = 1;
+let modeRH = false;
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  buildProgress();
+  buildDispoTable();
+  initAllCanvases();
+  initCheckboxes();
+  // Default dates
+  const today = new Date().toISOString().split('T')[0];
+  ['date-finale', 'date-cellulaire', 'date-conduite', 'date-formation', 'har-date'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = today;
+  });
+  document.getElementById('har-lieu').value = 'Lachine';
+  updateProgress();
+});
+
+// ── PROGRESS BAR ──
+function buildProgress() {
+  const wrap = document.getElementById('progress-steps');
+  wrap.innerHTML = STEPS.map((s, i) => `
+    <div class="p-step" id="pstep-${s.num}" onclick="goTo(${s.num})">
+      ${i > 0 ? '<div class="p-sep"></div>' : ''}
+      <div class="p-step-inner">
+        <div class="p-num"><span class="p-num-txt">${s.num}</span></div>
+        <span class="p-label">${s.label}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function updateProgress() {
+  STEPS.forEach(s => {
+    const el = document.getElementById(`pstep-${s.num}`);
+    el.classList.remove('active', 'done');
+    if (s.num === currentStep) el.classList.add('active');
+    else if (s.num < currentStep) el.classList.add('done');
+  });
+}
+
+// ── NAVIGATION ──
+function goTo(n) {
+  document.getElementById(`step-${currentStep}`).classList.remove('active');
+  currentStep = n;
+  document.getElementById(`step-${n}`).classList.add('active');
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (n === 8) buildSummary();
+}
+
+// ── MODE TOGGLE ──
+function toggleMode() {
+  modeRH = !modeRH;
+  const pip = document.getElementById('mode-pip');
+  pip.classList.toggle('rh', modeRH);
+  document.body.classList.toggle('mode-rh', modeRH);
+  document.getElementById('lbl-candidat').classList.toggle('active', !modeRH);
+  document.getElementById('lbl-rh').classList.toggle('active', modeRH);
+  // Show/hide RH-only fields
+  const rhCard = document.getElementById('card-rh-embauche');
+  if (rhCard) rhCard.style.display = modeRH ? 'block' : 'none';
+  // Horodateur visible to all, just info
+}
+
+// ── CHECKBOX / RADIO ──
+// ── CHECKBOX / RADIO — addEventListener (compatible Teams/iframe) ──
+function initCheckboxes() {
+  // Cases à cocher génériques (.cb-item)
+  document.querySelectorAll('.cb-item').forEach(item => {
+    item.querySelectorAll('input, .cb-box').forEach(child => {
+      child.addEventListener('click', e => e.stopPropagation());
+    });
+    item.addEventListener('click', function() {
+      const groupRadio = this.querySelector('input[type=radio]');
+      if (groupRadio) {
+        // Comportement radio : trouver le groupe parent
+        const parent = this.closest('[id]');
+        if (parent) {
+          parent.querySelectorAll('.cb-item').forEach(i => i.classList.remove('checked'));
+        }
+        this.classList.add('checked');
+        // Actions spéciales selon le groupe
+        const parentId = parent ? parent.id : '';
+        const val = this.dataset.val;
+        if (parentId === 'permis-oui-non') togglePermisDetails(val === 'Oui');
+        if (parentId === 'accident-oui-non') {
+          const det = document.getElementById('accident-details');
+          if (det) det.style.display = val === 'Oui' ? 'grid' : 'none';
+        }
+      } else {
+        // Comportement checkbox
+        this.classList.toggle('checked');
+        const cb = this.querySelector('input[type=checkbox]');
+        if (cb) cb.checked = this.classList.contains('checked');
+        // Action spéciale : Autre formation
+        if (this.dataset.val === 'Autre') {
+          const w = document.getElementById('formation-autre-wrap');
+          if (w) w.style.display = this.classList.contains('checked') ? 'block' : 'none';
+        }
+      }
+    });
+  });
+
+  // Cellules de disponibilité
+  document.querySelectorAll('.dispo-cell').forEach(cell => {
+    cell.addEventListener('click', function() {
+      this.classList.toggle('on');
+    });
+  });
+}
+
+function toggleCb(el, event) {
+  if (event && event.target && (event.target.tagName === 'INPUT' || event.target.classList.contains('cb-box'))) return;
+  el.classList.toggle('checked');
+  const inp = el.querySelector('input');
+  if (inp) inp.checked = el.classList.contains('checked');
+}
+function toggleRadio(el, groupId, event) {
+  if (event && event.target && (event.target.tagName === 'INPUT' || event.target.classList.contains('cb-box'))) return;
+  document.querySelectorAll(`#${groupId} .cb-item`).forEach(i => i.classList.remove('checked'));
+  el.classList.add('checked');
+}
+
+// ── PERMIS DETAILS ──
+function togglePermisDetails(show) {
+  document.getElementById('permis-num-wrap').style.display = show ? 'block' : 'none';
+  document.getElementById('permis-classes-wrap').style.display = show ? 'block' : 'none';
+}
+
+// ── LANGUAGE SELECTOR ──
+function selectLang(el, groupId, val) {
+  document.querySelectorAll(`#${groupId} .lang-opt`).forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  el.dataset.val = val;
+}
+
+// ── DISPONIBILITÉS TABLE ──
+function buildDispoTable() {
+  const jours = ['L', 'Ma', 'Me', 'J', 'V', 'S', 'D'];
+  const quarts = ['Jour', 'Soir', 'Nuit'];
+  const tbody = document.getElementById('dispo-tbody');
+  tbody.innerHTML = quarts.map(q => `
+    <tr>
+      <td>${q}</td>
+      ${jours.map((j, ji) => `<td><div class="dispo-cell" id="dispo-${q}-${ji}"></div></td>`).join('')}
+    </tr>
+  `).join('');
+  // Init dispo cells via addEventListener
+  document.querySelectorAll('.dispo-cell').forEach(cell => {
+    cell.addEventListener('click', function() { this.classList.toggle('on'); });
+  });
+}
+
+function getDispos() {
+  const quarts = ['Jour', 'Soir', 'Nuit'];
+  const jours = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+  const result = {};
+  quarts.forEach(q => {
+    jours.forEach((j, ji) => {
+      const cell = document.getElementById(`dispo-${q}-${ji}`);
+      if (cell && cell.classList.contains('on')) {
+        result[`${q}-${j}`] = true;
+      }
+    });
+  });
+  return result;
+}
+
+// ── ADD ROWS ──
+let expCount = 1;
+function addExp() {
+  expCount++;
+  const bloc = document.createElement('div');
+  bloc.className = 'exp-bloc';
+  bloc.innerHTML = `
+    <div class="exp-bloc-title">Employeur #${expCount}</div>
+    <div class="row col-3">
+      <div class="field"><label class="lbl">Nom de l'employeur</label><input type="text" placeholder="Nom de l'entreprise"></div>
+      <div class="field"><label class="lbl">Type d'entreprise</label><input type="text"></div>
+      <div class="field"><label class="lbl">Poste occupé</label><input type="text"></div>
+    </div>
+    <div class="row col-4">
+      <div class="field"><label class="lbl">De</label><input type="date"></div>
+      <div class="field"><label class="lbl">À</label><input type="date"></div>
+      <div class="field"><label class="lbl">Supérieur immédiat</label><input type="text"></div>
+      <div class="field"><label class="lbl"># Téléphone</label><input type="tel"></div>
+    </div>
+    <div class="row col-3" style="margin-bottom:0;">
+      <div class="field"><label class="lbl">Raison du départ</label><input type="text"></div>
+      <div class="field"><label class="lbl">Salaire</label><input type="text"></div>
+      <div class="field"><label class="lbl">Fonctions</label><input type="text"></div>
+    </div>`;
+  document.getElementById('experiences').appendChild(bloc);
+}
+
+let acadCount = 1;
+function addFormAcad() {
+  acadCount++;
+  const bloc = document.createElement('div');
+  bloc.className = 'exp-bloc';
+  bloc.innerHTML = `
+    <div class="row col-4">
+      <div class="field"><label class="lbl">Niveau</label><select><option value="">--</option><option>Secondaire</option><option>DEP</option><option>Collégial</option><option>Universitaire</option><option>Autre</option></select></div>
+      <div class="field" style="grid-column:span 2;"><label class="lbl">Nom de l'institution</label><input type="text"></div>
+      <div class="field"><label class="lbl">Année diplôme</label><input type="text" maxlength="4"></div>
+    </div>
+    <div class="row col-1" style="margin-bottom:0;"><div class="field"><label class="lbl">Nature des cours</label><input type="text"></div></div>`;
+  document.getElementById('formations-academiques').appendChild(bloc);
+}
+
+// ── CANVAS SIGNATURES ──
+const canvasStates = {};
+
+function initAllCanvases() {
+  const ids = ['sig-drogues', 'sig-drogues-emp', 'sig-fumee', 'sig-fumee-emp',
+    'sig-harcelement', 'sig-cellulaire', 'sig-conduite',
+    'sig-formation', 'sig-formation-emp', 'sig-finale'];
+  ids.forEach(id => initCanvas(id));
+}
+
+function initCanvas(id) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  let drawing = false, lastX = 0, lastY = 0;
+  canvasStates[id] = false;
+
+  function setSize() {
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.strokeStyle = '#111';
+    ctx.lineWidth = 1.8;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+  }
+  setTimeout(setSize, 50);
+  window.addEventListener('resize', setSize);
+
+  function pos(e) {
+    const r = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    const src = e.touches ? e.touches[0] : e;
+    return { x: (src.clientX - r.left), y: (src.clientY - r.top) };
+  }
+
+  canvas.addEventListener('mousedown', e => { drawing = true; const p = pos(e); lastX = p.x; lastY = p.y; });
+  canvas.addEventListener('mousemove', e => {
+    if (!drawing) return;
+    const p = pos(e);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
+    lastX = p.x; lastY = p.y;
+    canvasStates[id] = true;
+  });
+  canvas.addEventListener('mouseup', () => drawing = false);
+  canvas.addEventListener('mouseleave', () => drawing = false);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; const p = pos(e); lastX = p.x; lastY = p.y; }, { passive: false });
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (!drawing) return;
+    const p = pos(e);
+    ctx.beginPath(); ctx.moveTo(lastX, lastY); ctx.lineTo(p.x, p.y); ctx.stroke();
+    lastX = p.x; lastY = p.y;
+    canvasStates[id] = true;
+  }, { passive: false });
+  canvas.addEventListener('touchend', () => drawing = false);
+}
+
+function clearSig(id) {
+  const canvas = document.getElementById(id);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  canvasStates[id] = false;
+}
+
+// ── COLLECT DATA ──
+function collectData() {
+  const getCbVals = (groupId) => [...document.querySelectorAll(`#${groupId} .cb-item.checked`)].map(el => el.dataset.val);
+  const getRadioVal = (groupId) => { const el = document.querySelector(`#${groupId} .cb-item.checked`); return el ? el.dataset.val : ''; };
+  const getLang = (groupId) => { const el = document.querySelector(`#${groupId} .lang-opt.sel`); return el ? el.dataset.val || el.textContent.trim() : ''; };
+
+  return {
+    // Étape 1
+    postes: getCbVals('postes'),
+    quarts: getCbVals('quarts'),
+    typeEmploi: getCbVals('type-emploi'),
+    dateDispo: document.getElementById('date-dispo')?.value || '',
+    horodateur: document.getElementById('horodateur')?.value || '',
+    dateEmbauche: document.getElementById('date-embauche')?.value || '',
+    mot: document.getElementById('mot')?.value || '',
+    // Étape 2
+    nom: document.getElementById('nom')?.value.trim() || '',
+    prenom: document.getElementById('prenom')?.value.trim() || '',
+    ddn: document.getElementById('ddn')?.value || '',
+    adresse: `${document.getElementById('domicile')?.value || ''} ${document.getElementById('rue')?.value || ''}, App. ${document.getElementById('app')?.value || '–'}`.trim(),
+    ville: document.getElementById('ville')?.value || '',
+    province: document.getElementById('province')?.value || '',
+    codePostal: document.getElementById('codepostal')?.value || '',
+    telephone: document.getElementById('telephone')?.value || '',
+    courriel: document.getElementById('courriel')?.value || '',
+    nas: document.getElementById('nas')?.value || '',
+    // Étape 3
+    permis: getRadioVal('permis-oui-non'),
+    permisNum: document.getElementById('permis-num')?.value || '',
+    formations: getCbVals('postes-formations') || [...document.querySelectorAll('#step-3 .cb-item.checked')].map(e => e.dataset.val),
+    langFrEcrit: getLang('lang-fr-ecrit'),
+    langFrParle: getLang('lang-fr-parle'),
+    langEnParle: getLang('lang-en-parle'),
+    dispos: getDispos(),
+    // Étape 4
+    accident: getRadioVal('accident-oui-non'),
+    judiciaire: getRadioVal('judiciaire-oui-non'),
+    // Contacts urgence
+    contacts: getContacts(),
+    // Signatures
+    sigFinale: canvasStates['sig-finale'],
+    sigDrogues: canvasStates['sig-drogues'],
+    sigFumee: canvasStates['sig-fumee'],
+    sigHarcelement: canvasStates['sig-harcelement'],
+    sigCellulaire: canvasStates['sig-cellulaire'],
+    sigConduite: canvasStates['sig-conduite'],
+    sigFormation: canvasStates['sig-formation'],
+    // Dates
+    dateCellulaire: document.getElementById('date-cellulaire')?.value || '',
+    dateConduite: document.getElementById('date-conduite')?.value || '',
+    dateFormation: document.getElementById('date-formation')?.value || '',
+    dateFinale: document.getElementById('date-finale')?.value || '',
+    soumisLe: new Date().toISOString(),
+    modeRH: modeRH,
+  };
+}
+
+function getContacts() {
+  const contacts = [];
+  [1, 2, 3].forEach(i => {
+    const bloc = document.getElementById(`contact-${i}`);
+    if (!bloc) return;
+    const nom = bloc.querySelector('.c-nom')?.value?.trim() || '';
+    if (nom) contacts.push({
+      num: i, nom,
+      lien: bloc.querySelector('.c-lien')?.value || '',
+      telRes: bloc.querySelector('.c-res')?.value || '',
+      telCell: bloc.querySelector('.c-cell')?.value || '',
+      telAutre: bloc.querySelector('.c-autre')?.value || '',
+    });
+  });
+  return contacts;
+}
+
+// ── SUMMARY PAGE ──
+function buildSummary() {
+  const d = collectData();
+  const nom = d.nom || '—'; const prenom = d.prenom || '—';
+
+  document.getElementById('summary-content').innerHTML = `
+    <div class="summary-bloc">
+      <h4>Postulation</h4>
+      <div class="summary-row"><span class="summary-key">Poste(s)</span><span class="summary-val">${d.postes.join(', ') || '—'}</span></div>
+      <div class="summary-row"><span class="summary-key">Quart(s)</span><span class="summary-val">${d.quarts.join(', ') || '—'}</span></div>
+      <div class="summary-row"><span class="summary-key">Disponible</span><span class="summary-val">${d.dateDispo || '—'}</span></div>
+      <div class="summary-row"><span class="summary-key">Type emploi</span><span class="summary-val">${d.typeEmploi.join(', ') || '—'}</span></div>
+    </div>
+    <div class="summary-bloc">
+      <h4>Identification</h4>
+      <div class="summary-row"><span class="summary-key">Nom complet</span><span class="summary-val">${prenom} ${nom}</span></div>
+      <div class="summary-row"><span class="summary-key">Naissance</span><span class="summary-val">${d.ddn || '—'}</span></div>
+      <div class="summary-row"><span class="summary-key">Téléphone</span><span class="summary-val">${d.telephone || '—'}</span></div>
+      <div class="summary-row"><span class="summary-key">Courriel</span><span class="summary-val">${d.courriel || '—'}</span></div>
+      <div class="summary-row"><span class="summary-key">Ville</span><span class="summary-val">${d.ville || '—'}, ${d.province}</span></div>
+    </div>
+    <div class="summary-bloc">
+      <h4>Compétences</h4>
+      <div class="summary-row"><span class="summary-key">Permis</span><span class="summary-val">${d.permis || '—'} ${d.permisNum ? '(#' + d.permisNum + ')' : ''}</span></div>
+      <div class="summary-row"><span class="summary-key">Français écrit</span><span class="summary-val">${d.langFrEcrit || '—'}</span></div>
+      <div class="summary-row"><span class="summary-key">Français parlé</span><span class="summary-val">${d.langFrParle || '—'}</span></div>
+      <div class="summary-row"><span class="summary-key">Anglais parlé</span><span class="summary-val">${d.langEnParle || '—'}</span></div>
+    </div>
+    <div class="summary-bloc">
+      <h4>Renseignements</h4>
+      <div class="summary-row"><span class="summary-key">Accident travail</span><span class="summary-val">${d.accident || '—'}</span></div>
+      <div class="summary-row"><span class="summary-key">Antécédents</span><span class="summary-val">${d.judiciaire || '—'}</span></div>
+      <div class="summary-row"><span class="summary-key">Contacts urg.</span><span class="summary-val">${d.contacts.length} contact(s)</span></div>
+    </div>
+  `;
+
+  const policies = [
+    { label: 'Demande d\'emploi — signature finale', key: 'sigFinale' },
+    { label: 'Politique tolérance zéro (drogues)', key: 'sigDrogues' },
+    { label: 'Politique sans fumée', key: 'sigFumee' },
+    { label: 'Politique harcèlement', key: 'sigHarcelement' },
+    { label: 'Politique cellulaires', key: 'sigCellulaire' },
+    { label: 'Dossier de conduite', key: 'sigConduite' },
+    { label: 'Frais de formation', key: 'sigFormation' },
+  ];
+  document.getElementById('policy-checks').innerHTML = policies.map(p => `
+    <div class="policy-check-item">
+      <div class="dot ${d[p.key] ? '' : 'missing'}"></div>
+      <span>${p.label} — ${d[p.key] ? '<span style="color:var(--vert);font-weight:600;">Signé ✓</span>' : '<span style="color:var(--rouge);font-weight:600;">Non signé</span>'}</span>
+    </div>
+  `).join('');
+}
+
+// ── SUBMIT ──
+async function soumettre() {
+  const d = collectData();
+  if (!d.nom || !d.prenom) { toast('⚠ Veuillez remplir le nom et prénom (étape 2)', false); return; }
+  if (!d.sigFinale) { toast('⚠ La signature finale est requise (étape 7)', false); return; }
+  if (!d.postes.length) { toast('⚠ Veuillez sélectionner au moins un poste (étape 1)', false); return; }
+
+  // Collect all signatures as base64
+  const sigIds = ['sig-drogues', 'sig-drogues-emp', 'sig-fumee', 'sig-fumee-emp',
+    'sig-harcelement', 'sig-cellulaire', 'sig-conduite', 'sig-formation', 'sig-formation-emp', 'sig-finale'];
+  const sigs = {};
+  sigIds.forEach(id => {
+    const c = document.getElementById(id);
+    if (c) sigs[id] = c.toDataURL('image/png');
+  });
+
+  const payload = { ...d, signatures: sigs, courrielRH: COURRIEL_RH };
+
+  if (!POWER_AUTOMATE_URL) {
+    console.log('📋 Dossier d\'embauche:', payload);
+    toast('✓ Dossier validé! Configurez POWER_AUTOMATE_URL pour l\'envoi réel.', true);
+    showConfirm(d);
+    return;
+  }
+
+  const btn = document.querySelector('.btn-success');
+  btn.disabled = true;
+  try {
+    const resp = await fetch(POWER_AUTOMATE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (resp.ok) {
+      toast('✓ Dossier soumis avec succès!', true);
+      showConfirm(d);
+    } else throw new Error('HTTP ' + resp.status);
+  } catch (e) {
+    toast('Erreur d\'envoi : ' + e.message, false);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+function showConfirm(d) {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:600;display:flex;align-items:center;justify-content:center;';
+  overlay.innerHTML = `
+    <div style="background:#fff;border-radius:8px;padding:32px;max-width:500px;width:90%;box-shadow:0 16px 48px rgba(0,0,0,0.3);">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px;">
+        <div style="width:44px;height:44px;background:#1e7a3a;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <div>
+          <div style="font-weight:700;font-size:16px;">Dossier d'embauche soumis</div>
+          <div style="font-size:12px;color:#888;">${d.prenom} ${d.nom} · ${new Date().toLocaleDateString('fr-CA', {dateStyle:'long'})}</div>
+        </div>
+      </div>
+      <div style="background:#f7f7f7;border-radius:6px;padding:14px;font-size:13px;line-height:1.8;margin-bottom:20px;">
+        <strong>Poste(s) :</strong> ${d.postes.join(', ')}<br>
+        <strong>Quart(s) :</strong> ${d.quarts.join(', ')}<br>
+        <strong>Disponible le :</strong> ${d.dateDispo}<br>
+        <strong>Courriel :</strong> ${d.courriel || '(non fourni)'}<br>
+        <strong>Envoyé à :</strong> ${COURRIEL_RH}
+      </div>
+      <div style="display:flex;gap:10px;justify-content:flex-end;">
+        <button onclick="this.closest('div[style]').remove()" style="font-family:inherit;font-size:13px;font-weight:600;padding:9px 18px;border-radius:5px;border:1.5px solid #dedede;background:#fff;cursor:pointer;">Fermer</button>
+        <button onclick="window.print();this.closest('div[style]').remove();" style="font-family:inherit;font-size:13px;font-weight:600;padding:9px 18px;border-radius:5px;border:none;background:#C8202A;color:#fff;cursor:pointer;">Imprimer dossier</button>
+      </div>
+    </div>`;
+  document.body.appendChild(overla
