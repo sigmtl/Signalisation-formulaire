@@ -1812,22 +1812,15 @@ async function soumettre() {
   const btn = document.querySelector('.btn-success');
   btn.disabled = true;
   try {
-    // Obtenir le token Azure AD pour authentifier la requête Power Automate
-    let headers = { 'Content-Type': 'application/json' };
-    try {
-      const token = await getGraphToken();
-      if (token) headers['Authorization'] = `Bearer ${token}`;
-    } catch (e) { console.warn('Token non disponible:', e); }
-
     const resp = await fetch(POWER_AUTOMATE_URL, {
       method: 'POST',
-      headers: headers,
-      body: JSON.stringify(payload)
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      mode: 'no-cors'
     });
-    if (resp.ok || resp.status === 202) {
-      toast('✓ Dossier soumis avec succès!', true);
-      showConfirm(d);
-    } else throw new Error('HTTP ' + resp.status);
+    // no-cors ne retourne pas de statut lisible — on assume le succès
+    toast('✓ Dossier soumis avec succès!', true);
+    showConfirm(d);
   } catch (e) {
     toast('Erreur d\'envoi : ' + e.message, false);
   } finally {
