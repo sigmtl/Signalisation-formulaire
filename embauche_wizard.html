@@ -1316,12 +1316,13 @@ body.mode-rh .rh-badge { display: inline-block; }
 // ══════════════════════════════════════════
 const AZURE_CLIENT_ID    = '8a548c14-a846-45c2-a984-16c4321c63ae';
 const AZURE_TENANT_ID    = '89a0cab0-c64e-4691-8b09-21d41c6db329';
-const POWER_AUTOMATE_URL = 'https://default89a0cab0c64e46918b0921d41c6db3.29.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/d734a233d67247d18cda1147a3eef9b3/triggers/manual/paths/invoke?api-version=1'; // ← URL Power Automate configurée
+const POWER_AUTOMATE_URL = 'https://default89a0cab0c64e46918b0921d41c6db3.29.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/d734a233d67247d18cda1147a3eef9b3/triggers/manual/paths/invoke?api-version=1';
 const COURRIEL_RH = 'rh@signalisationmontreal.ca';
 
-// ── MICROSOFT GRAPH AUTH (MSAL) ──
+// ── GLOBALS ──
 let msalInstance = null;
 let graphToken = null;
+const canvasStates = {};
 
 async function getGraphToken() {
   if (graphToken) return graphToken;
@@ -1436,7 +1437,6 @@ window.addExp = addExp;
 window.addFormAcad = addFormAcad;
 window.clearSig = clearSig;
 window.soumettre = soumettre;
-window.toggleTerrain = toggleTerrain;
 
 // ── MODE TOGGLE ──
 function toggleMode() {
@@ -1617,8 +1617,6 @@ function addFormAcad() {
 }
 
 // ── CANVAS SIGNATURES ──
-const canvasStates = {};
-
 function initAllCanvases() {
   const ids = ['sig-drogues', 'sig-drogues-emp', 'sig-fumee', 'sig-fumee-emp',
     'sig-harcelement', 'sig-cellulaire', 'sig-conduite',
