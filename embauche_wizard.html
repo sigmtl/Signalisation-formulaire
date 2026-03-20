@@ -1429,6 +1429,10 @@ function goTo(n) {
   updateProgress();
   window.scrollTo({ top: 0, behavior: 'smooth' });
   if (n === 8) buildSummary();
+  // Réinitialiser les canvas quand on arrive aux étapes de signature
+  if (n === 6 || n === 7) {
+    setTimeout(() => initAllCanvases(), 100);
+  }
 }
 // Exposer explicitement sur window pour les onclick HTML
 window.goTo = goTo;
@@ -1553,10 +1557,7 @@ function buildDispoTable() {
       ${jours.map((j, ji) => `<td><div class="dispo-cell" id="dispo-${q}-${ji}"></div></td>`).join('')}
     </tr>
   `).join('');
-  // Init dispo cells via addEventListener
-  document.querySelectorAll('.dispo-cell').forEach(cell => {
-    cell.addEventListener('click', function() { this.classList.toggle('on'); });
-  });
+  // Les clics sont gérés par la délégation globale sur document
 }
 
 function getDispos() {
